@@ -8,9 +8,10 @@ import numpy as np
 
 class Evento(object):
 
-    def __init__(self, tipo, tiempo):
+    def __init__(self, tipo, tiempo,nro_paciente = None):
         self.tipo = tipo
         self.tiempo = tiempo
+        self.nro_paciente = nro_paciente
 
     @property
     def tipo(self):
@@ -27,6 +28,16 @@ class Evento(object):
     @tiempo.setter
     def tiempo(self, tiempo):
         self._tiempo = tiempo
+
+
+    @property
+    def paciente(self):
+        return self._nro_paciente
+
+    @tipo.setter
+    def paciente(self, p):
+        self._nro_paciente = p
+
 
     def __str__(self):
         return "El tipo de evento es: %s - El tiempo es: %d" % (self.tipo, self.tiempo)
@@ -55,12 +66,13 @@ class Paciente(object):
 
     def __init__(self, tiempo_llegada):
         Paciente.nro_paciente = self.nro_paciente = Paciente.nro_paciente + 1
-        self.tiempo_internacion = round(np.random.exponential(2)) * 24 * 60
+        self.tiempo_internacion = round(np.random.exponential(2) * 24 * 60)
         self.quirofano = np.random.choice([True,False])
         ## Esto dos tiempos se usan para calcular el tiempo que
         ## espera un paciente para ser internado
         self.tiempo_inicio_espera_internacion = tiempo_llegada
         self.tiempo_fin_espera_internacion = 0
+
 
     @property
     def tiempo_internacion(self):
@@ -78,13 +90,32 @@ class Paciente(object):
     def quirofano(self,x):
         self.__quirofano = x
 
+
+    @property
+    def tiempo_inicio_espera_internacion(self):
+        return self.__tiempo_inicio_espera_internacion
+
+    @quirofano.setter
+    def tiempo_inicio_espera_internacion(self,t):
+        self.__tiempo_inicio_espera_internacion = t
+
+
+    @property
+    def tiempo_fin_espera_internacion(self):
+        return self.__tiempo_fin_espera_internacion
+
+    @quirofano.setter
+    def tiempo_fin_espera_internacion(self,t):
+        self.__tiempo_fin_espera_internacion = t
+
+
     def tiempo_espera(self):
         """
             Devuelve el tiempo que espera un paciente
             para ser internado
         :return Tiempo (en minutos):
         """
-        return self.tiempo_salida - self.tiempo_llegada
+        return self.tiempo_fin_espera_internacion - self.tiempo_inicio_espera_internacion
 
 
 class Hospital(object):
@@ -103,22 +134,41 @@ class Hospital(object):
     def camas(self,x):
         self.__camas = x
 
+    @property
+    def sala_operatoria(self):
+        return self.__sala_operatoria
+
     def agregar_paciente_a_espera(self,paciente):
         """
             Agrega paciente a la cola de espera
             para internacion
         """
-
         self.cola_espera_internacion.append(paciente)
-
 
     def sacar_paciente_de_espera(self):
         """
             Obtiene el proximo paciente que esta en
-            la cola de inte
+            la cola de intenacion
         """
 
         return self.cola_espera_internacion.popleft()
+
+    def agregar_a_cola_espera_operacion(self,paciente):
+        """
+            Agrega paciente a la cola de operacion
+        """
+        self.cola_espera_operacion.append(paciente)
+
+    def sacar_de_cola_espera_operacion(self):
+        """
+            Obtiene el proximo paciente que esta en
+            la cola de intenacion
+        """
+        return self.cola_espera_operacion.popleft()
+
+    def abrir_sala_operaciones(self):
+        self.sala_operatoria.cerrada = False
+
 
     def internar(self,paciente):
         """
@@ -127,14 +177,21 @@ class Hospital(object):
             cama y encolarlo para operarlo, si es que
             tiene orden para quirofano
         """
-        pass
+        for c in self.camas:
+            if (self.camas[c] is None):
+                self.camas[c]=paciente
+                break
 
     def alta_paciente(self,paciente):
         """
             Se tiene que liberar la cama en la que
             estaba el paciente.
         """
-        pass
+        for c in self.camas:
+            if ( (self.camas[c] is not None) and 
+                    self.camas[c].nro_paciente == nro_paciente):
+                self.camas[c]=None
+                break
 
     def tiene_cama_libre(self):
         """
@@ -147,6 +204,10 @@ class Hospital(object):
                 return True
         return False
 
+    def calcular_cirugias_diarias(self):
+        self.sala_operatoria.calcular_cirugias_diarias()
+
+
 class SalaOperatoria:
 
     def __init__(self, cantidad_quirofanos):
@@ -154,6 +215,8 @@ class SalaOperatoria:
         self.quirofano1 = None
         self.quirofano2 = None
         self.cerrado = False
+        #
+        self.cant_cirugias_restantes_diarias = 0
 
 
     @property
@@ -163,6 +226,15 @@ class SalaOperatoria:
     @cerrado.setter
     def cerrado(self, x):
         self.__cerrado = x
+
+
+    @property
+    def cant_cirugias_restantes_diarias(self):
+        return self.__cant_cirugias_restantes_diarias
+
+    @cerrado.setter
+    def cant_cirugias_restantes_diarias(self, x):
+        self.__cant_cirugias_restantes_diarias = x
 
     def comenzar_operacion(self,paciente):
         """
@@ -178,17 +250,42 @@ class SalaOperatoria:
         """
         pass
 
+    def calcular_cirugias_diarias(self):
+        self.cant_cirugias_restantes_diarias = round(np.random.poisson(10))
+
+    def marcar_quirofano_ocupado(self):
+        for q in self.quirofanos:
+            if not q.esta_ocupado:
+                q.esta_ocupado=True
+                break
+
+    def marcar_quirofano_libre(self):
+        for q in self.quirofanos:
+            if q.esta_ocupado:
+                q.esta_ocupado=False
+                break
+
 
 class Quirofano(object):
 
     def __init__(self, x, y):
-        self.posicion= Posicion(x,y)
+        self.esta_ocupado = False
+    #     self.posicion= Posicion(x,y)
 
-    def getX(self):
-        return self.posicion.getX()
+    @property
+    def esta_ocupado(self):
+        return self.__esta_ocupado
 
-    def getY(self):
-        return self.posicion.getY()
+    @cerrado.setter
+    def esta_ocupado(self, x):
+        self.__esta_ocupado = x
+
+
+    # def getX(self):
+    #     return self.posicion.getX()
+
+    # def getY(self):
+    #     return self.posicion.getY()
 
 
 class FEL(object):
