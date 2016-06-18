@@ -4,6 +4,8 @@ __author__ = 'leandro'
 from collections import deque
 import numpy as np
 
+#from vista import Posicion
+
 class Evento(object):
 
     def __init__(self, tipo, tiempo):
@@ -51,10 +53,14 @@ class Paciente(object):
 
     nro_paciente = 0
 
-    def __init__(self):
+    def __init__(self, tiempo_llegada):
         Paciente.nro_paciente = self.nro_paciente = Paciente.nro_paciente + 1
-        self.tiempo_internacion = np.random.exponential(2)
+        self.tiempo_internacion = round(np.random.exponential(2)) * 24 * 60
         self.quirofano = np.random.choice([True,False])
+        ## Esto dos tiempos se usan para calcular el tiempo que
+        ## espera un paciente para ser internado
+        self.tiempo_inicio_espera_internacion = tiempo_llegada
+        self.tiempo_fin_espera_internacion = 0
 
     @property
     def tiempo_internacion(self):
@@ -72,14 +78,22 @@ class Paciente(object):
     def quirofano(self,x):
         self.__quirofano = x
 
+    def tiempo_espera(self):
+        """
+            Devuelve el tiempo que espera un paciente
+            para ser internado
+        :return Tiempo (en minutos):
+        """
+        return self.tiempo_salida - self.tiempo_llegada
+
 
 class Hospital(object):
 
-    def __init__(self, cantidad_camas):
+    def __init__(self, cantidad_camas, cantidad_quirofanos):
         self.camas = {x:None for x in range(1, cantidad_camas+1)}
         self.cola_espera_internacion = deque([])
-        self.cola_atencion = deque([])
-        self.sala_operatoria = SalaOperatoria()
+        self.cola_espera_operacion = deque([])
+        self.sala_operatoria = SalaOperatoria(cantidad_quirofanos)
 
     @property
     def camas(self):
@@ -89,19 +103,22 @@ class Hospital(object):
     def camas(self,x):
         self.__camas = x
 
-    def agregar_paciente_a_espera(self):
-        """
-            Obtiene el proximo paciente que esta en
-            la cola de inte
-        """
-        return self.cola_espera_internacion.popleft()
-
-    def sacar_paciente_de_espera(self,paciente):
+    def agregar_paciente_a_espera(self,paciente):
         """
             Agrega paciente a la cola de espera
             para internacion
         """
+
         self.cola_espera_internacion.append(paciente)
+
+
+    def sacar_paciente_de_espera(self):
+        """
+            Obtiene el proximo paciente que esta en
+            la cola de inte
+        """
+
+        return self.cola_espera_internacion.popleft()
 
     def internar(self,paciente):
         """
@@ -119,13 +136,23 @@ class Hospital(object):
         """
         pass
 
+    def tiene_cama_libre(self):
+        """
+            Indica si hay una cama libre
+        :return Boolean:
+        """
+
+        for cama in self.camas:
+            if  self.camas[cama] == None:
+                return True
+        return False
 
 class SalaOperatoria:
 
-    def __init__(self):
+    def __init__(self, cantidad_quirofanos):
         self.cola_operacion = []
-        self.quirofano1 = False
-        self.quirofano2 = False
+        self.quirofano1 = None
+        self.quirofano2 = None
         self.cerrado = False
 
 
@@ -150,6 +177,18 @@ class SalaOperatoria:
             para un paciente dado
         """
         pass
+
+
+class Quirofano(object):
+
+    def __init__(self, x, y):
+        self.posicion= Posicion(x,y)
+
+    def getX(self):
+        return self.posicion.getX()
+
+    def getY(self):
+        return self.posicion.getY()
 
 
 class FEL(object):
