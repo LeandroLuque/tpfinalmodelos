@@ -100,17 +100,20 @@ def procesar_apertura_so(reloj, hospital, FEL):
     hospital.calcular_cirugias_diarias()
 
     quirofanos = hospital.sala_operatoria.quirofanos
-    for q in quirofanos:
-        if (not q.ocupado):
-            p = hospital.sacar_de_cola_espera_operacion()
-            if (p is not None):
+    if (len(hospital.cola_espera_operacion) > 0):
+        ##TODO Abstraer en un metodo que sea operar_paciente en hospital
+        for q in quirofanos:
+            if (not q.ocupado):
+                p = hospital.sacar_de_cola_espera_operacion()
                 q.ocupado = True
                 e = Evento("Paciente Entra a Quirofano",reloj.tiempo+1,p.nro_paciente)
                 FEL.agregar_evento(e)
 
 
 def procesar_cierre_so(reloj, hospital, FEL):
-    pass
+    hospital.sala_operatoria.cerrado = True
+    e = Evento("Apertura de Sala de Operaciones", reloj.tiempo+12*60)
+    FEL.agregar_evento(e)
 
 
 if __name__ == '__main__':
@@ -153,3 +156,5 @@ if __name__ == '__main__':
             evento = Evento("Inicio Dia",reloj.tiempo+ 1440)
             cantidad_dias += 1
             FEL.agregar_evento(evento)
+
+    print(tiempos_de_espera_pacientes)

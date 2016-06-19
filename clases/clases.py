@@ -115,7 +115,7 @@ class Paciente(object):
             para ser internado
         :return Tiempo (en minutos):
         """
-        return self.tiempo_fin_espera_internacion - self.tiempo_inicio_espera_internacion
+        return self.__tiempo_fin_espera_internacion - self.__tiempo_inicio_espera_internacion
 
 
 class Hospital(object):
