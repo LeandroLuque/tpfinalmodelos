@@ -59,12 +59,13 @@ def procesar_internacion(reloj, hospital, FEL):
     """ """
     paciente = hospital.sacar_paciente_de_espera()
     paciente.tiempo_fin_espera_internacion = reloj.tiempo
-    e = Evento("Fin Paciente Internado",reloj.tiempo + paciente.tiempo_internacion,
-        paciente.nro_paciente)
     #Asignar cama
     hospital.internar(paciente)
+    e = Evento("Fin Paciente Internado",reloj.tiempo + paciente.tiempo_internacion,
+        paciente.nro_paciente)
     FEL.agregar_evento(e)
     tiempos_de_espera_pacientes.append(paciente.tiempo_espera())
+
 
 def procesar_fin_internacion(reloj, hospital, FEL,nro_paciente):
     hospital.alta_paciente(nro_paciente)
@@ -72,6 +73,7 @@ def procesar_fin_internacion(reloj, hospital, FEL,nro_paciente):
         paciente= hospital.sacar_paciente_de_espera()
         e =  Evento("Paciente Internado",reloj.tiempo+1,paciente.nro_paciente)
         FEL.agregar_evento(e)
+
 
 def procesar_entrada_quirofano(reloj, hospital, FEL,nro_paciente):
     t = round(np.random.exponential(1 * 60))
@@ -90,7 +92,6 @@ def procesar_salida_quirofano(reloj, hospital, FEL,nro_paciente):
         FEL.agregar_evento(e)
         #Se marca un quirofano como libre
         hospital.sala_operatoria.marcar_quirofano_libre()
-
 
 
 def procesar_apertura_so(reloj, hospital, FEL):
@@ -157,4 +158,5 @@ if __name__ == '__main__':
             cantidad_dias += 1
             FEL.agregar_evento(evento)
 
-    print(tiempos_de_espera_pacientes)
+    print(hospital.cola_espera_internacion)
+    print(hospital.cola_espera_operacion)

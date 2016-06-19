@@ -189,6 +189,8 @@ class Hospital(object):
         for c in self.camas:
             if (self.camas[c] is None):
                 self.camas[c]=paciente
+                if paciente.quirofano:
+                    self.cola_espera_operacion.append(paciente)
                 break
 
     def alta_paciente(self,nro_paciente):
