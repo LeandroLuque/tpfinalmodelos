@@ -102,18 +102,20 @@ class Graficador(object):
 			# Se establecen las posiciones de los graficos estadisticos
 			axprev = self.plt.axes([0.62,0.08, 0.1, 0.075])
 			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
-			self.figure.add_axes(axprev)
-			self.figure.add_axes(axnext)
 			# Se crea el objeto indice que maneja los eventos y el redibujado
 			# de los inicializar_ventana().
 			bnext=Button(axnext,"Siguiente")
 			bnext.on_clicked(self.siguiente)
 			bprev = Button(axprev,"Anterior")
 			bprev.on_clicked(self.anterior)
-
+			# Se dibujan los cambios en el grafico
 			self.plt.draw()
+			# Se redibujan todos los elementos de la interfaz grafica
+			self.plt.show()
 
 		elif self.dic_datos_graficos[self.indice]["tipo"] == DIAGRAMA_TORTA:
+			#Se borran todos los labels del grafico anterior
+			self.plt.clf()
 			self.figure.add_subplot(111)
 			self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
 			self.plt.pie(self.dic_datos_graficos[self.indice]["datos"],
@@ -124,7 +126,22 @@ class Graficador(object):
 				autopct=self.make_autopct(
 							self.dic_datos_graficos[self.indice]["porcentajes"]) )
 				
+			self.figure.add_subplot(111)
+			self.figure.subplots_adjust(bottom=0.3)
+
+			# Se establecen las posiciones de los graficos estadisticos
+			axprev = self.plt.axes([0.62,0.08, 0.1, 0.075])
+			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
+			# Se crea el objeto indice que maneja los eventos y el redibujado
+			# de los inicializar_ventana().
+			bnext=Button(axnext,"Siguiente")
+			bnext.on_clicked(self.siguiente)
+			bprev = Button(axprev,"Anterior")
+			bprev.on_clicked(self.anterior)
+
 			self.plt.draw()
+			self.plt.show()
+
 
 
 
