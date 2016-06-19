@@ -1,0 +1,348 @@
+El tipo de evento es: Arribo de Paciente - El tiempo es: 489
+El tipo de evento es: Arribo de Paciente - El tiempo es: 501
+El tipo de evento es: Arribo de Paciente - El tiempo es: 506
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 490
+El tipo de evento es: Arribo de Paciente - El tiempo es: 501
+El tipo de evento es: Arribo de Paciente - El tiempo es: 506
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 501
+El tipo de evento es: Arribo de Paciente - El tiempo es: 506
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 502
+El tipo de evento es: Arribo de Paciente - El tiempo es: 506
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 506
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 507
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 520
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 521
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 538
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 539
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 568
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 569
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 576
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 577
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 606
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 607
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 630
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 727
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 631
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 727
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 727
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Arribo de Paciente - El tiempo es: 827
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Paciente Internado - El tiempo es: 828
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 871
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Cierre de Sala de Operaciones - El tiempo es: 1200
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Dia - El tiempo es: 1440
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 1686
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2629
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 2752
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3251
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3315
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 3909
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4448
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
+El tipo de evento es: Fin Paciente Internado - El tiempo es: 4798
+============================
