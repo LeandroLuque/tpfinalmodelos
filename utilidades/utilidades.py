@@ -33,8 +33,7 @@ class Graficador(object):
 			self.indice=1
 		print "Cambio self.indice: %s" % self.indice
 		print ""
-		self.graficar_histograma_actual()
-
+		self.graficar_diagrama()
 
 	def anterior(self, event):
 		self.indice -= 1
@@ -42,27 +41,29 @@ class Graficador(object):
 			self.indice=len(self.dic_datos_graficos)
 		print "Cambio self.indice: %s" % self.indice
 		print ""
-		self.graficar_histograma_actual()
+		self.graficar_diagrama()
 
 
 	def inicializar_ventana(self):
+		#Se configura el subplot que contiene los botones de la GUI
 		self.figure,self.axis = self.plt.subplots()
 		self.plt.subplots_adjust(bottom=0.2)
-		self.plt.clf()
 		# Se establecen las posiciones de los graficos estadisticos
 		axprev = self.plt.axes([0.62,0.08, 0.1, 0.075])
 		axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
 		# Se crea el objeto indice que maneja los eventos y el redibujado
-		# de los graficos.
+		# de los inicializar_ventana().
 		bnext=Button(axnext,"Siguiente")
 		bnext.on_clicked(self.siguiente)
 		bprev = Button(axprev,"Anterior")
 		bprev.on_clicked(self.anterior)
+
+		#Sei dibuja el diagrama actual segun el nro de indice
+		self.graficar_diagrama()
+		#Se muestra la venta
 		self.plt.show()
-		
 		print "Ventana inicializada !"
 		print ""
-
 
 	#Se agrega un grafico a la coleccion de graficos
 	def agregar_grafico(self,datos):
@@ -78,25 +79,42 @@ class Graficador(object):
 			return '{p:.2f}% '.format(p=pct)
 		return my_autopct
 
-
-	#Se grafica el numero de grafico actual que se mantiene en self.dic_datos_graficos.
-	def graficar_histograma_actual(self):
+	def graficar_diagrama(self):
 		print "Graficando histograma actual en self.indice: %s " % self.indice
 		print "..."
 		# Se accede al primer subplot creado anteriormente
-		self.plt.subplot(111)
 		if self.dic_datos_graficos[self.indice]["tipo"] == HISTOGRAMA:
-			self.plt.cla()
+			self.plt.clf()
+			self.figure.add_subplot(111)
+			#Se configura el subplot que contiene los botones de la GUI	
 			self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
 			self.plt.xlabel(self.dic_datos_graficos[self.indice]["label_x"]) 
 			self.plt.ylabel(self.dic_datos_graficos[self.indice]["label_y"])
 			#[minX,minY,maxX,maxY]
-			self.plt.axis([20,100, 0, 200])
+			self.plt.axis(self.dic_datos_graficos[self.indice]["limites_histograma"])
+
 			self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],
 				50, facecolor='blue',range=(1,100), alpha=0.75)
+			
+			self.figure.add_subplot(111)
+			self.figure.subplots_adjust(bottom=0.3)
+
+			# Se establecen las posiciones de los graficos estadisticos
+			axprev = self.plt.axes([0.62,0.08, 0.1, 0.075])
+			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
+			self.figure.add_axes(axprev)
+			self.figure.add_axes(axnext)
+			# Se crea el objeto indice que maneja los eventos y el redibujado
+			# de los inicializar_ventana().
+			bnext=Button(axnext,"Siguiente")
+			bnext.on_clicked(self.siguiente)
+			bprev = Button(axprev,"Anterior")
+			bprev.on_clicked(self.anterior)
+
+			self.plt.draw()
 
 		elif self.dic_datos_graficos[self.indice]["tipo"] == DIAGRAMA_TORTA:
-			self.plt.cla()
+			self.figure.add_subplot(111)
 			self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
 			self.plt.pie(self.dic_datos_graficos[self.indice]["datos"],
 				labels = self.dic_datos_graficos[self.indice]["labels"],
@@ -105,7 +123,43 @@ class Graficador(object):
 				shadow=True,
 				autopct=self.make_autopct(
 							self.dic_datos_graficos[self.indice]["porcentajes"]) )
-		self.plt.draw()
+				
+			self.plt.draw()
+
+
+
+	# BACKUP!
+	# def graficar_diagrama(self):
+	# 	print "Graficando histograma actual en self.indice: %s " % self.indice
+	# 	print "..."
+	# 	# Se accede al primer subplot creado anteriormente
+	# 	self.plt.subplot(111)
+	# 	if self.dic_datos_graficos[self.indice]["tipo"] == HISTOGRAMA:
+	# 		self.plt.clf()
+	# 		#Se configura el subplot que contiene los botones de la GUI	
+	# 		self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
+	# 		self.plt.xlabel(self.dic_datos_graficos[self.indice]["label_x"]) 
+	# 		self.plt.ylabel(self.dic_datos_graficos[self.indice]["label_y"])
+	# 		#[minX,minY,maxX,maxY]
+	# 		self.plt.axis(self.dic_datos_graficos[self.indice]["limites_histograma"])
+
+	# 		self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],
+	# 			50, facecolor='blue',range=(1,100), alpha=0.75)
+
+	# 	elif self.dic_datos_graficos[self.indice]["tipo"] == DIAGRAMA_TORTA:
+	# 		self.plt.subplot(111)
+	# 		self.plt.cla()
+	# 		self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
+	# 		self.plt.pie(self.dic_datos_graficos[self.indice]["datos"],
+	# 			labels = self.dic_datos_graficos[self.indice]["labels"],
+	# 			explode = self.dic_datos_graficos[self.indice]["explode"],
+	# 			labeldistance=.2,
+	# 			shadow=True,
+	# 			autopct=self.make_autopct(
+	# 						self.dic_datos_graficos[self.indice]["porcentajes"]) )
+			
+		
+	# 	self.plt.draw()
 
 
 def main():
@@ -115,7 +169,9 @@ def main():
 		"titulo":"Histogama de prueba",
 		"label_x":"Valores de tiempo",
 		"label_y":"Frecuencias de tiempo",
-		"datos_x":np.random.normal(50,5,1000)
+		"datos_x":np.random.normal(50,5,1000),
+		#[minX,minY,maxX,maxY]
+		"limites_histograma":[20,100, 0, 200]
 	}
 
 	d2= {
@@ -131,7 +187,6 @@ def main():
 	g.agregar_grafico(d)
 	g.agregar_grafico(d2)
 	g.inicializar_ventana()
-	g.graficar_histograma_actual()
 
 main()
 
