@@ -81,7 +81,7 @@ if __name__ == '__main__':
         print("============================")
         ##TODO reemplazar por la cantidad de dias
         evento = FEL.extraer()
-        reloj.tiempo = reloj.tiempo + evento.tiempo
+        reloj.tiempo = evento.tiempo
 
         if evento.tipo == "Arribo de Paciente":
             procesar_arribo(reloj, hospital, FEL)
