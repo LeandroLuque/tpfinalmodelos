@@ -40,12 +40,14 @@ class Evento(object):
 
 
     def __str__(self):
-        return "El tipo de evento es: %s - El tiempo es: %d" % (self.tipo, self.tiempo)
+        return "Nro paciente: %s - El tipo de evento es: %s - El tiempo es: %d" % (
+            self.nro_paciente,self.tipo, self.tiempo)
 
 
 class Reloj(object):
 
-    TIEMPO_INICIAL = 60 * 8
+    # TIEMPO_INICIAL = 60 * 8
+    TIEMPO_INICIAL = 0
 
     def __init__(self):
         self.tiempo = Reloj.TIEMPO_INICIAL
@@ -118,6 +120,13 @@ class Paciente(object):
         return self.__tiempo_fin_espera_internacion - self.__tiempo_inicio_espera_internacion
 
 
+    def tiene_turno_quirofano(self):
+        """ Determina si un paciente tiene turno de quirofano o no.
+        :return Boolean
+        """
+        return self.quirofano
+
+
 class Hospital(object):
 
     def __init__(self, cantidad_camas, cantidad_quirofanos):
@@ -175,6 +184,7 @@ class Hospital(object):
         else:
             return self.cola_espera_operacion.popleft()
 
+
     def abrir_sala_operaciones(self):
         self.sala_operatoria.cerrada = False
 
@@ -215,8 +225,21 @@ class Hospital(object):
                 return True
         return False
 
+    # Calcula la cant. de cirugias diarias que se pueden hacer agregar_paciente_a_espera
     def calcular_cirugias_diarias(self):
         self.sala_operatoria.calcular_cirugias_diarias()
+
+    #Actualiza el estado de los quirofanos
+    def cerrar_quirofanos(self):
+        self.sala_operatoria.cerrar_quirofanos()
+
+    def mostrar_cola_espera_operacion(self):
+        print "Pacientes en cola_espera_operacion actualmente:"
+        if len(self.cola_espera_operacion) == 0:
+            print "- 0;"
+            return 
+        for p in self.cola_espera_operacion:
+            print "- %s;" % p.nro_paciente
 
 
 class SalaOperatoria:
@@ -299,6 +322,8 @@ class Quirofano(object):
     def ocupado(self, x):
         self.__ocupado = x
 
+    def esta_ocupado(self):
+        return self.ocupado
 
     # def getX(self):
     #     return self.posicion.getX()

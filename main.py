@@ -26,6 +26,7 @@ def inicializar_simulacion(FEL, reloj):
 
     ## Obtener el evento de cierre de sala de operaciones y agregarlo a la FEL
     ## Cargar los diez pacientes con distribucion exponencial
+    print "Tiempo de reloj en inicializar_simulacion(): %s" % reloj.tiempo
 
     tiempos_arribos = [round(np.random.exponential(100)) for value in range(1,CANT_PACIENTES_INICIAL + 1)]
     for tiempo in tiempos_arribos:
@@ -59,7 +60,8 @@ def procesar_internacion(reloj, hospital, FEL):
     """ """
     paciente = hospital.sacar_paciente_de_espera()
     paciente.tiempo_fin_espera_internacion = reloj.tiempo
-    #Asignar cama
+    # Se asigna la cama y si el paciente tiene turno de quirofano, se lo pone en
+    # la cola de pacientes para operacion
     hospital.internar(paciente)
     e = Evento("Fin Paciente Internado",reloj.tiempo + paciente.tiempo_internacion,
         paciente.nro_paciente)
@@ -84,22 +86,22 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,nro_paciente):
     hospital.sala_operatoria.cant_cirugias_restantes_diarias-=1
 
 
-def procesar_salida_quirofano(reloj, hospital, FEL,nro_paciente):
+def procesar_salida_quirofano(reloj, hospital, FEL):
     #Se verifica si la cant. de operaciones es mayor a cero, hay que planificar el prox. evento
     # de entrada a quirofano
-    if hospital.sala_operatoria.cant_cirugias_restantes_diarias>0:
-        e=Evento("Paciente Entra a Quirofano",reloj.tiempo+1,nro_paciente)
+    hospital.mostrar_cola_espera_operacion()
+    p = hospital.sacar_de_cola_espera_operacion()
+    if hospital.sala_operatoria.cant_cirugias_restantes_diarias>0 and p is not None:
+        e=Evento("Paciente Entra a Quirofano",reloj.tiempo+1,p.nro_paciente)
         FEL.agregar_evento(e)
         #Se marca un quirofano como libre
         hospital.sala_operatoria.marcar_quirofano_libre()
-
 
 def procesar_apertura_so(reloj, hospital, FEL):
     e = Evento("Cierre de Sala de Operaciones",reloj.tiempo+12*60)
     FEL.agregar_evento(e)
     hospital.abrir_sala_operaciones()
     hospital.calcular_cirugias_diarias()
-
     quirofanos = hospital.sala_operatoria.quirofanos
     if (len(hospital.cola_espera_operacion) > 0):
         ##TODO Abstraer en un metodo que sea operar_paciente en hospital
@@ -115,6 +117,16 @@ def procesar_cierre_so(reloj, hospital, FEL):
     hospital.sala_operatoria.cerrado = True
     e = Evento("Apertura de Sala de Operaciones", reloj.tiempo+12*60)
     FEL.agregar_evento(e)
+
+
+# Agrega los pacientes del nuevo dia, cuando encuentra en la FEL el evento
+# de inicio de dia
+def agregar_nuevos_pacientes(self):
+    if len(hospital.cola_espera_internacion) < MAX_COLA_ESPERA_INTERNACION:
+        tiempos_arribos = [round(np.random.exponential(100)) for value in range(1,CANT_PACIENTES_INICIAL + 1)]
+        for tiempo in tiempos_arribos:
+            evento = Evento("Arribo de Paciente",tiempo + reloj.tiempo)
+            FEL.agregar_evento(evento)
 
 
 if __name__ == '__main__':
@@ -141,11 +153,11 @@ if __name__ == '__main__':
         elif evento.tipo == "Fin Paciente Internado":
             procesar_fin_internacion(reloj, hospital, FEL,evento.nro_paciente)
 
-        elif evento.tipo == "Paciente EPaciente Entra a Quirofano":
+        elif evento.tipo == "Paciente Entra a Quirofano":
             procesar_entrada_quirofano(reloj, hospital, FEL, evento.nro_paciente)
 
         elif evento.tipo == "Paciente Sale de Quirofano":
-            procesar_salida_quirofano(reloj, hospital, FEL,evento.nro_paciente)
+            procesar_salida_quirofano(reloj, hospital, FEL)
 
         elif evento.tipo == "Apertura de Sala de Operaciones":
             procesar_apertura_so(reloj, hospital, FEL)
@@ -157,6 +169,8 @@ if __name__ == '__main__':
             evento = Evento("Inicio Dia",reloj.tiempo+ 1440)
             cantidad_dias += 1
             FEL.agregar_evento(evento)
+            #TODO: Descomentar cuando funcione bien el nuevo dia
+            # self.agregar_nuevos_pacientes(FEL)
 
     print(hospital.cola_espera_internacion)
     print(hospital.cola_espera_operacion)
