@@ -8,10 +8,11 @@ import numpy as np
 
 class Evento(object):
 
-    def __init__(self, tipo, tiempo,nro_paciente = None):
+    def __init__(self, tipo, tiempo,nro_paciente = None,tiempo_max_internacion=None):
         self.tipo = tipo
         self.tiempo = tiempo
         self.nro_paciente = nro_paciente
+        self.tiempo_maximo_de_internacion=tiempo_max_internacion
 
     @property
     def tipo(self):
@@ -20,6 +21,15 @@ class Evento(object):
     @tipo.setter
     def tipo(self, tipo):
         self._tipo = tipo
+
+
+    @property
+    def tiempo_maximo_de_internacion(self):
+        return self.__tiempo_maximo_de_internacion
+
+    @tiempo_maximo_de_internacion.setter
+    def tiempo_maximo_de_internacion(self, tipo):
+        self.__tiempo_maximo_de_internacion = tipo
 
     @property
     def tiempo(self):
@@ -74,6 +84,18 @@ class Paciente(object):
         ## espera un paciente para ser internado
         self.tiempo_inicio_espera_internacion = tiempo_llegada
         self.tiempo_fin_espera_internacion = 0
+
+        self.tiempo_maximo_de_internacion=0
+
+    @property
+    def tiempo_maximo_de_internacion(self):
+        return self.__tiempo_maximo_de_internacion
+
+    @tiempo_maximo_de_internacion.setter
+    def tiempo_maximo_de_internacion(self,x):
+        self.__tiempo_maximo_de_internacion = x
+
+
 
 
     @property
@@ -163,8 +185,12 @@ class Hospital(object):
             Obtiene el proximo paciente que esta en
             la cola de intenacion
         """
-
         return self.cola_espera_internacion.popleft()
+        # if len(self.cola_espera_internacion) == 0:
+        #     return None
+        # else:
+        #     return self.cola_espera_internacion.popleft()
+
 
     def agregar_a_cola_espera_operacion(self,paciente):
         """
@@ -306,7 +332,6 @@ class SalaOperatoria:
             if q.esta_ocupado:
                 q.esta_ocupado=False
                 break
-
 
 class Quirofano(object):
 
