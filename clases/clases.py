@@ -146,11 +146,13 @@ class Paciente(object):
         :return:
         """
 
-        if self.quirofano:
-            if self.operado:
+        if self.__quirofano:
+            if self.__operado:
                 return True
             else:
                 return False
+        else:
+            return True
 
 class Hospital(object):
 
@@ -256,7 +258,10 @@ class Hospital(object):
 
     # Calcula la cant. de cirugias diarias que se pueden hacer agregar_paciente_a_espera
     def calcular_cirugias_diarias(self):
-        self.sala_operatoria.calcular_cirugias_diarias()
+        self.__sala_opearatoria.calcular_cirugias_diarias()
+
+    def decrementar_cirugias_diarias(self):
+        self.__sala_opearatoria.decrementar_cirugias_diarias()
 
     #Actualiza el estado de los quirofanos
     def cerrar_quirofanos(self):
@@ -303,7 +308,7 @@ class SalaOperatoria:
     def cant_cirugias_restantes_diarias(self):
         return self.__cant_cirugias_restantes_diarias
 
-    @cerrado.setter
+    @cant_cirugias_restantes_diarias.setter
     def cant_cirugias_restantes_diarias(self, x):
         self.__cant_cirugias_restantes_diarias = x
 
@@ -322,7 +327,11 @@ class SalaOperatoria:
         pass
 
     def calcular_cirugias_diarias(self):
-        self.cant_cirugias_restantes_diarias = round(np.random.poisson(10))
+        self.__cant_cirugias_restantes_diarias = round(np.random.poisson(10))
+        pass
+
+    def decrementar_cirugias_diarias(self):
+        self.__cant_cirugias_restantes_diarias -= 1
 
     def marcar_quirofano_ocupado(self):
         for q in self.quirofanos:
