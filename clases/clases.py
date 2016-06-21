@@ -45,7 +45,7 @@ class Evento(object):
 
 class Reloj(object):
 
-    TIEMPO_INICIAL = 60 * 8
+    TIEMPO_INICIAL = 60 * 0
 
     def __init__(self):
         self.tiempo = Reloj.TIEMPO_INICIAL
