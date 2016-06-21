@@ -13,7 +13,7 @@ from clases import Hospital
 """
 CANT_PACIENTES_INICIAL = 10
 CANT_EXPERIMENTO = 1 # years
-CANT_CORRIDAS = 30# DIAS
+CANT_CORRIDAS = 3 * 1# DIAS
 
 MAX_COLA_ESPERA_INTERNACION = 250
 cantidad_dias = 0
@@ -179,7 +179,7 @@ def procesar_cierre_so(reloj, hospital, FEL):
 # de inicio de dia
 def agregar_nuevos_pacientes(self):
 
-    tiempos_arribos = [round(np.random.exponential(100)) for value in range(1,CANT_PACIENTES_INICIAL + 1)]
+    tiempos_arribos = [round(np.random.exponential(100)) for value in range(1,np.random.poisson(100))]
     for tiempo in tiempos_arribos:
         evento = Evento("Arribo de Paciente",tiempo + reloj.tiempo)
         FEL.agregar_evento(evento)
@@ -208,6 +208,8 @@ if __name__ == '__main__':
     inicializar_simulacion(FEL, reloj)
     #global cantidad_pacientes_atendidos
     #global cantidad_pacientes_no_atendidos
+
+
     while (cantidad_dias < CANT_CORRIDAS):
         print("========DIA %d=============" % cantidad_dias)
         FEL.mostrar_eventos()
@@ -241,7 +243,7 @@ if __name__ == '__main__':
             evento = Evento("Inicio Dia",reloj.tiempo+ 1440)
             cantidad_dias += 1
             FEL.agregar_evento(evento)
-            #agregar_nuevos_pacientes(FEL)
+            agregar_nuevos_pacientes(FEL)
 
     #print(hospital.cola_espera_internacion)
     #print(hospital.cola_espera_operacion)
