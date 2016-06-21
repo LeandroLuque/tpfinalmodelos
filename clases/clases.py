@@ -8,11 +8,10 @@ import numpy as np
 
 class Evento(object):
 
-    def __init__(self, tipo, tiempo,nro_paciente = None,tiempo_max_internacion=None):
+    def __init__(self, tipo, tiempo,paciente = None):
         self.tipo = tipo
         self.tiempo = tiempo
-        self.nro_paciente = nro_paciente
-        self.tiempo_maximo_de_internacion=tiempo_max_internacion
+        self.paciente = paciente
 
     @property
     def tipo(self):
@@ -21,15 +20,6 @@ class Evento(object):
     @tipo.setter
     def tipo(self, tipo):
         self._tipo = tipo
-
-
-    @property
-    def tiempo_maximo_de_internacion(self):
-        return self.__tiempo_maximo_de_internacion
-
-    @tiempo_maximo_de_internacion.setter
-    def tiempo_maximo_de_internacion(self, tipo):
-        self.__tiempo_maximo_de_internacion = tipo
 
     @property
     def tiempo(self):
@@ -42,16 +32,20 @@ class Evento(object):
 
     @property
     def paciente(self):
-        return self._nro_paciente
+        return self.__paciente
 
-    @tipo.setter
+    @paciente.setter
     def paciente(self, p):
-        self._nro_paciente = p
+        self.__paciente = p
 
 
     def __str__(self):
-        return "Nro paciente: %s - El tipo de evento es: %s - El tiempo es: %d" % (
-            self.nro_paciente,self.tipo, self.tiempo)
+        if self.paciente is not None:
+            return "Nro paciente: %s - Turno:%s - El tipo de evento es: %s - El tiempo es: %d" % (
+                self.paciente.nro_paciente,self.paciente.quirofano,self.tipo, self.tiempo)
+        else:
+            return "El tipo de evento es: %s - El tiempo es: %d" % (
+                self.tipo, self.tiempo)
 
 
 class Reloj(object):
@@ -84,18 +78,16 @@ class Paciente(object):
         ## espera un paciente para ser internado
         self.tiempo_inicio_espera_internacion = tiempo_llegada
         self.tiempo_fin_espera_internacion = 0
+        self.operado = False
 
-        self.tiempo_maximo_de_internacion=0
 
     @property
-    def tiempo_maximo_de_internacion(self):
-        return self.__tiempo_maximo_de_internacion
+    def operado(self):
+        return self.__operado
 
-    @tiempo_maximo_de_internacion.setter
-    def tiempo_maximo_de_internacion(self,x):
-        self.__tiempo_maximo_de_internacion = x
-
-
+    @operado.setter
+    def operado(self,x):
+        self.__operado = x
 
 
     @property
@@ -119,7 +111,7 @@ class Paciente(object):
     def tiempo_inicio_espera_internacion(self):
         return self.__tiempo_inicio_espera_internacion
 
-    @quirofano.setter
+    @tiempo_inicio_espera_internacion.setter
     def tiempo_inicio_espera_internacion(self,t):
         self.__tiempo_inicio_espera_internacion = t
 
@@ -128,7 +120,7 @@ class Paciente(object):
     def tiempo_fin_espera_internacion(self):
         return self.__tiempo_fin_espera_internacion
 
-    @quirofano.setter
+    @tiempo_fin_espera_internacion.setter
     def tiempo_fin_espera_internacion(self,t):
         self.__tiempo_fin_espera_internacion = t
 
@@ -141,13 +133,24 @@ class Paciente(object):
         """
         return self.__tiempo_fin_espera_internacion - self.__tiempo_inicio_espera_internacion
 
-
     def tiene_turno_quirofano(self):
         """ Determina si un paciente tiene turno de quirofano o no.
         :return Boolean
         """
         return self.quirofano
 
+    def atendido(self):
+        """
+            Indica si el paciente que tenia turno
+            para el quirofano, fue operado
+        :return:
+        """
+
+        if self.quirofano:
+            if self.operado:
+                return True
+            else:
+                return False
 
 class Hospital(object):
 
@@ -260,12 +263,12 @@ class Hospital(object):
         self.sala_operatoria.cerrar_quirofanos()
 
     def mostrar_cola_espera_operacion(self):
-        print "Pacientes en cola_espera_operacion actualmente:"
+        print ("Pacientes en cola_espera_operacion actualmente:")
         if len(self.cola_espera_operacion) == 0:
-            print "- 0;"
+            print ("- 0;")
             return 
         for p in self.cola_espera_operacion:
-            print "- %s;" % p.nro_paciente
+            print ("- %s;" % p.nro_paciente)
 
 
 class SalaOperatoria:
