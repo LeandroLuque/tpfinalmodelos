@@ -249,7 +249,6 @@ class Hospital(object):
             Indica si hay una cama libre
         :return Boolean:
         """
-
         for cama in self.camas:
             if  self.camas[cama] == None:
                 return True
@@ -275,6 +274,19 @@ class Hospital(object):
             return 
         for p in self.cola_espera_operacion:
             print ("- %s;" % p.nro_paciente)
+
+    def mostrar_cant_camas_libres(self):
+        cant_ocupadas=cant=0
+        for c in self.camas:
+            if self.camas[c] is None:
+                cant += 1
+            else:
+                cant_ocupadas +=1
+        print ("Camas actualizadas: cantidad de camas libres= %s ; cantidad camas ocupadas: %s" % 
+                                (cant,cant_ocupadas))
+        print ("")
+        # print ("Camas actualizadas: %s" % hospital.camas)
+        # print ("")
 
 
 class SalaOperatoria:
@@ -431,11 +443,7 @@ class FEL(object):
                 (tipo_evento,cant_con_turno))
             print ("- La cantidad de eventos del tipo %s en FEL de pacientes sin turno de quirofano es: %s" % 
                 (tipo_evento,cant_sin_turno))
-                
-        
-        
-
-        
+            
     def calcular_tamanio(self):
         """ 
             Retorna la cantidad de elementos que estan en la FEL

@@ -8,15 +8,19 @@ from clases import FEL
 from clases import Paciente
 from clases import Hospital
 
+from utilidades.utilidades import *
+from vista.vistaV2 import *
+
 """
     Constantes para la simulacion del sistema
 """
 CANT_PACIENTES_INICIAL = 10
 CANT_EXPERIMENTO = 1 # years
-CANT_CORRIDAS = 5 * 1# DIAS
+CANT_CORRIDAS = 10 * 1# DIAS
 
-MAX_COLA_ESPERA_INTERNACION = 250
+MAX_COLA_ESPERA_INTERNACION = 300
 cantidad_dias = 0
+
 #=================================================================================================
 #====================================== Variables de salida ======================================
 #=================================================================================================
@@ -35,6 +39,16 @@ tiempo_uso_sala_operaciones = 0
 #====================================== Variables de estado ======================================
 #=================================================================================================
 total_pacientes_ingresaron_hospital = 0
+
+#=================================================================================================
+#====================================== Variables para datos estadisticos ======================================
+#=================================================================================================
+tiempos_de_arribos = []
+
+tiempo_acumulado_sala_operaciones = 0
+tiempos_anuales_sala_operaciones = []
+
+
 
 
 #TODOS PENDIENTES
@@ -71,7 +85,6 @@ def procesar_arribo(reloj, hospital, FEL):
     :param hospital
     :return:
     """
-
     global pacientes_sin_operacion
     global pacientes_para_operacion
     global total_pacientes_ingresaron_hospital 
@@ -84,12 +97,42 @@ def procesar_arribo(reloj, hospital, FEL):
             pacientes_sin_operacion += 1
         hospital.agregar_paciente_a_espera(paciente)
         if (hospital.tiene_cama_libre()):
-            ## TODO El tiempo de espera promedio para internar un paciente es siempre 1!!
-            # Corregir!
             e = Evento("Paciente Internado",reloj.tiempo+1,paciente)
             FEL.agregar_evento(e)
+        
+
+        #TODO SACAR ESTE METODO UNA VEZ QUE ANDE LA SIMULACION!
+        hospital.mostrar_cant_camas_libres()
+
+# BACKUP!
+# def procesar_arribo(reloj, hospital, FEL):
+#     """
+#         Este metodo sirve para procesar el arribo de
+#         un paciente. Se crea el paciente y se lo agrega a la
+#         cola de espera para internacion del hospital
+#     :param reloj:
+#     :param hospital
+#     :return:
+#     """
+#     global pacientes_sin_operacion
+#     global pacientes_para_operacion
+#     global total_pacientes_ingresaron_hospital 
+#     if len(hospital.cola_espera_internacion) < MAX_COLA_ESPERA_INTERNACION:
+#         paciente = Paciente(reloj.tiempo)
+#         total_pacientes_ingresaron_hospital += 1
+#         if paciente.quirofano:
+#             pacientes_para_operacion += 1
+#         else:
+#             pacientes_sin_operacion += 1
+#         hospital.agregar_paciente_a_espera(paciente)
+#         if (hospital.tiene_cama_libre()):
+#             e = Evento("Paciente Internado",reloj.tiempo+1,paciente)
+#             FEL.agregar_evento(e)
+        
 
 
+
+    
 def procesar_internacion(reloj, hospital, FEL):
 
     if len(hospital.cola_espera_internacion) > 0:
@@ -122,6 +165,7 @@ def procesar_fin_internacion(reloj, hospital, FEL,paciente):
 
 def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
     global tiempo_uso_sala_operaciones
+    global tiempo_acumulado_sala_operaciones
     t = round(np.random.exponential(1 * 60))
     if reloj.tiempo + t < paciente.tiempo_fin_espera_internacion + paciente.tiempo_internacion:
         e = Evento("Paciente Sale de Quirofano",reloj.tiempo+t,paciente)
@@ -130,7 +174,15 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
         hospital.sala_operatoria.marcar_quirofano_ocupado()
         # Se establece el tiempo de inicio y de fin de uso quirofano.
         tiempo_uso_sala_operaciones += t
-    
+
+        tiempo_acumulado_sala_operaciones += tiempo_uso_sala_operaciones
+        # Si estoy en el ultimo dia del anio
+        print ("En procesar_entrada_quirofano() dia: %s" % cantidad_dias)
+        if (cantidad_dias % 360) == 0:
+            tiempos_anuales_sala_operaciones.append(tiempo_acumulado_sala_operaciones)
+            tiempo_acumulado_sala_operaciones = 0
+
+
 def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
     """
         Metodo que procesa el evento de Salida de Quirofano
@@ -160,7 +212,6 @@ def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
         #Se marca un quirofano como libre
         hospital.sala_operatoria.marcar_quirofano_libre()
         FEL.agregar_evento(e)
-        # cantidad_pacientes_atendidos+=1
 
 
 def procesar_apertura_so(reloj, hospital, FEL):
@@ -211,7 +262,7 @@ def imprimir_estadisticas(tiempos_espera,porc_uso_quirofano,
                                 cantidad_pacientes_FEL):
     print ("======================================================================================")
     print ("")
-    print ("- Tiempo de espera promedio para internacion(TEI): %d " % int(np.average(tiempos_espera)))
+    print ("- Tiempo de espera promedio para internacion(TEI): %s " % float(np.average(tiempos_espera)))
     print ("- Porcentaje del tiempo total de uso de la sala de operaciones (PTUS): %s " % porc_uso_quirofano)
     print ("---------------------------------------------------------------------------------")
     print ("- Cantidad de pacientes que logran ser operados (CPLO): %s " % pac_operados)
@@ -239,16 +290,16 @@ if __name__ == '__main__':
 
     FEL = FEL()
     reloj = Reloj()
-    hospital = Hospital(250,2)
+    hospital = Hospital(120,2)
     inicializar_simulacion(FEL, reloj)
     #global cantidad_pacientes_atendidos
     #global cantidad_pacientes_no_atendidos
-
+    global cantidad_dias
 
     while (cantidad_dias < CANT_CORRIDAS):
-        print("========DIA %d=============" % cantidad_dias)
-        FEL.mostrar_eventos()
-        print("============================")
+        # print("========DIA %d=============" % cantidad_dias)
+        # FEL.mostrar_eventos()
+        # print("============================")
         ##TODO reemplazar por la cantidad de dias
         evento = FEL.extraer()
         reloj.tiempo = evento.tiempo
@@ -279,6 +330,7 @@ if __name__ == '__main__':
             cantidad_dias += 1
             FEL.agregar_evento(evento)
             agregar_nuevos_pacientes(FEL)
+            print ("Nuevo dia! La cantidad de dias actual es: %s" % cantidad_dias)
 
     #Se obtienen las varaibles de estado de las colas de espera de internacion y operacion
     cantidad_pacientes_para_internar = 0
@@ -302,4 +354,46 @@ if __name__ == '__main__':
                             cantidad_pacientes_para_internar,
                             cantidad_pacientes_para_operar,
                             cantidad_pacientes_FEL)
+    
+    print (" ********************************************************************* ")
+    print ("tiempos de uso anuales del quirfano : %s" % tiempos_anuales_sala_operaciones)
+    print ("")
+
+
+    # g = Graficador(plt)
+    # histograma_tiempos_espera={
+    #     "tipo":HISTOGRAMA,
+    #     "titulo":"Histogama de prueba",
+    #     "label_x":"Valores de tiempo",
+    #     "label_y":"Frecuencias de tiempo",
+    #     "datos_x":tiempos_de_espera_pacientes,
+    #     #[minX,minY,maxX,maxY]
+    #     "limites_histograma":[20,100, 0, 100]
+    # }
+    # histograma_tiempos_uso_sala_operaciones={
+    #     "tipo":HISTOGRAMA,
+    #     "titulo":"Histogama de prueba",
+    #     "label_x":"Valores de tiempo",
+    #     "label_y":"Frecuencias de tiempo",
+    #     "datos_x":tiempos_anuales_sala_operaciones,
+    #     #[minX,minY,maxX,maxY]
+    #     "limites_histograma":[20,100, 0, 100]
+    # }
+
+    # d2= {
+    #     "tipo":DIAGRAMA_TORTA,
+    #     "titulo": "Prueba de torta",
+    #     "labels":["Tiempo usado del quirofano","Tiempo ocioso del quirofano"],
+    #     "datos":[87,13],
+    #     "explode":[0.2,0],
+    #     "porcentajes":[10,20]
+    # }
+    # # Se inicializa la ventana y se muestra una vez que se cargan los datos
+    # g.agregar_grafico(histograma_tiempos_espera)
+    # g.agregar_grafico(d2)
+    # g.inicializar_ventana()
+
+
+
+
 

@@ -205,5 +205,5 @@ def main():
 	g.agregar_grafico(d2)
 	g.inicializar_ventana()
 
-main()
+# main()
 
