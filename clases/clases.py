@@ -15,19 +15,19 @@ class Evento(object):
 
     @property
     def tipo(self):
-        return self._tipo
+        return self.__tipo
 
     @tipo.setter
     def tipo(self, tipo):
-        self._tipo = tipo
+        self.__tipo = tipo
 
     @property
     def tiempo(self):
-        return self._tiempo
+        return self.__tiempo
 
     @tiempo.setter
     def tiempo(self, tiempo):
-        self._tiempo = tiempo
+        self.__tiempo = tiempo
 
 
     @property
@@ -58,12 +58,12 @@ class Reloj(object):
 
     @property
     def tiempo(self):
-        return self._tiempo
+        return self.__tiempo
 
     @tiempo.setter
     def tiempo(self, tiempo):
         if tiempo >= 0:
-            self._tiempo = tiempo
+            self.__tiempo = tiempo
 
 
 class Paciente(object):
@@ -131,7 +131,7 @@ class Paciente(object):
             para ser internado
         :return Tiempo (en minutos):
         """
-        return self.__tiempo_fin_espera_internacion - self.__tiempo_inicio_espera_internacion
+        return self.tiempo_fin_espera_internacion - self.tiempo_inicio_espera_internacion
 
     def tiene_turno_quirofano(self):
         """ Determina si un paciente tiene turno de quirofano o no.
@@ -145,9 +145,8 @@ class Paciente(object):
             para el quirofano, fue operado
         :return:
         """
-
-        if self.__quirofano:
-            if self.__operado:
+        if self.quirofano:
+            if self.operado:
                 return True
             else:
                 return False
@@ -172,11 +171,11 @@ class Hospital(object):
 
     @property
     def sala_operatoria(self):
-        return self.__sala_opearatoria
+        return self.__sala_operatoria
 
     @sala_operatoria.setter
     def sala_operatoria(self,x):
-        self.__sala_opearatoria = x
+        self.__sala_operatoria = x
 
     def agregar_paciente_a_espera(self,paciente):
         """
@@ -257,11 +256,13 @@ class Hospital(object):
         return False
 
     # Calcula la cant. de cirugias diarias que se pueden hacer agregar_paciente_a_espera
+    # Hospital.calcular_cirugias_diarias()
     def calcular_cirugias_diarias(self):
-        self.__sala_opearatoria.calcular_cirugias_diarias()
+        self.sala_operatoria.calcular_cirugias_diarias()
 
+    # Hospital.calcular_cirugias_diarias
     def decrementar_cirugias_diarias(self):
-        self.__sala_opearatoria.decrementar_cirugias_diarias()
+        self.sala_operatoria.decrementar_cirugias_diarias()
 
     #Actualiza el estado de los quirofanos
     def cerrar_quirofanos(self):
@@ -312,26 +313,16 @@ class SalaOperatoria:
     def cant_cirugias_restantes_diarias(self, x):
         self.__cant_cirugias_restantes_diarias = x
 
-    def comenzar_operacion(self,paciente):
-        """
-            Aca hay que dejar pasar el tiempo de
-            operacion para el paciente dado
-        """
-        pass
-
-    def finalizar_operacion(self,paciente):
-        """
-            Finaliza la operacion de curso
-            para un paciente dado
-        """
-        pass
-
+    # SalaOperatoria.calcular_cirugias_diarias()
     def calcular_cirugias_diarias(self):
-        self.__cant_cirugias_restantes_diarias = round(np.random.poisson(10))
-        pass
+        self.cant_cirugias_restantes_diarias = round(np.random.poisson(10))
+        print (" En calcular_cirugias_diarias()")
+        print (" cantidad de cirugias restantes diarias: %s" % self.cant_cirugias_restantes_diarias)
+        print ("")
 
+    # SalaOperatoria.calcular_cirugias_diarias()
     def decrementar_cirugias_diarias(self):
-        self.__cant_cirugias_restantes_diarias -= 1
+        self.cant_cirugias_restantes_diarias -= 1
 
     def marcar_quirofano_ocupado(self):
         for q in self.quirofanos:
@@ -376,11 +367,11 @@ class FEL(object):
 
     @property
     def lista(self):
-        return self._lista
+        return self.__lista
 
     @lista.setter
     def lista(self, lista):
-        self._lista = lista
+        self.__lista = lista
 
     def agregar_evento(self,evento):
         self.lista.append(evento)
@@ -415,3 +406,38 @@ class FEL(object):
         for evento in self.lista:
             conta += evento.tiempo
         return conta
+
+    def mostrar_cant_tipo_evento(self,tipo_evento,verificar_paciente_con_turno=False):
+        """ 
+            Muestra las ocurrencias de eventos para un tipo de evento en la FEL.
+            Nota:tiene_turno_quirofano se utiliza en los pacientes que estan internados y 
+            que tienen turno para quirofano.
+        """
+        cant=0
+        cant_con_turno=cant_sin_turno=0
+        if not verificar_paciente_con_turno:
+            for e in self.lista:
+                if e.tipo == tipo_evento:
+                    cant += 1
+            print ("- La cantidad de eventos del tipo %s en FEL es: %s" % (tipo_evento,cant))
+        else:
+            for e in self.lista:
+                if e.tipo == tipo_evento:
+                    if e.paciente.quirofano:
+                        cant_con_turno += 1
+                    else:
+                        cant_sin_turno += 1
+            print ("- La cantidad de eventos del tipo %s en FEL de pacientes con turno de quirofano es: %s" % 
+                (tipo_evento,cant_con_turno))
+            print ("- La cantidad de eventos del tipo %s en FEL de pacientes sin turno de quirofano es: %s" % 
+                (tipo_evento,cant_sin_turno))
+                
+        
+        
+
+        
+    def calcular_tamanio(self):
+        """ 
+            Retorna la cantidad de elementos que estan en la FEL
+        """
+        return len(self.lista)
