@@ -85,17 +85,64 @@ class Graficador(object):
 		# Se accede al primer subplot creado anteriormente
 		if self.dic_datos_graficos[self.indice]["tipo"] == HISTOGRAMA:
 			self.plt.clf()
-			self.figure.add_subplot(111)
+			ax=self.figure.add_subplot(111)
 			#Se configura el subplot que contiene los botones de la GUI	
 			self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
 			self.plt.xlabel(self.dic_datos_graficos[self.indice]["label_x"]) 
 			self.plt.ylabel(self.dic_datos_graficos[self.indice]["label_y"])
 			#[minX,minY,maxX,maxY]
-			self.plt.axis(self.dic_datos_graficos[self.indice]["limites_histograma"])
+			# self.plt.axis(self.dic_datos_graficos[self.indice]["limites_histograma"])
+			# self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],
+			# 	50, facecolor='blue',range=(1,100), alpha=0.75)
+			print ("Valores impresos del histograma: %s" % self.dic_datos_graficos[self.indice]["datos_x"])
+			print ("-") 
+			self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],facecolor='blue',
+								alpha=0.75)
+			ax.set_xlim(self.dic_datos_graficos[self.indice]["limites_histograma"][0],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][2])
 
-			self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],
-				50, facecolor='blue',range=(1,100), alpha=0.75)
+			ax.set_ylim(self.dic_datos_graficos[self.indice]["limites_histograma"][1],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][3])
 			
+			
+			escala_x = escala_y = []
+			escala_x = self.configurar_valores_en_escala(
+							self.dic_datos_graficos[self.indice]["limites_histograma"][0],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][2],
+									self.dic_datos_graficos[self.indice]["paso_x"])
+			
+			escala_y = self.configurar_valores_en_escala(
+							self.dic_datos_graficos[self.indice]["limites_histograma"][1],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][3],
+									self.dic_datos_graficos[self.indice]["paso_y"])
+
+			print ("Escala X producida: %s" % escala_x)
+			print ("Escala Y producida: %s; min_y: %s;max_y: %s; paso: %s " % 
+										(escala_y,
+											self.dic_datos_graficos[self.indice]["limites_histograma"][1],
+											self.dic_datos_graficos[self.indice]["limites_histograma"][3],
+											self.dic_datos_graficos[self.indice]["paso_y"]) )
+
+			#Ejemplo.
+			# ax.set_xlim([40, 120])
+			# ax.set_xticks([40,50,60,70,80,90,100,110,120])
+			# ax.set_xticklabels(["40","50","60","70","80","90","100","110","120"])
+
+			# Se configuran los valores de los valores de x en la escala (xticks) y sus 
+			# valores de xticks_labels que se muestran en el grafico. El limite se establece
+			# para centrar el grafico.
+			ax.set_xlim([self.dic_datos_graficos[self.indice]["limites_histograma"][0],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][2]])
+			ax.set_xticks( map(float,escala_x))
+			ax.set_xticklabels(escala_x)
+
+			ax.set_ylim([self.dic_datos_graficos[self.indice]["limites_histograma"][1],
+								self.dic_datos_graficos[self.indice]["limites_histograma"][3]])
+			ax.set_yticks( map(float,escala_y))
+			ax.set_yticklabels(escala_y)
+			ax.grid(True)
+			
+			#Se grafican los botones!
 			self.figure.add_subplot(111)
 			self.figure.subplots_adjust(bottom=0.3)
 
@@ -132,8 +179,8 @@ class Graficador(object):
 			# Se establecen las posiciones de los graficos estadisticos
 			axprev = self.plt.axes([0.62,0.08, 0.1, 0.075])
 			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
-			# Se crea el objeto indice que maneja los eventos y el redibujado
-			# de los inicializar_ventana().
+			# # Se crea el objeto indice que maneja los eventos y el redibujado
+			# # de los inicializar_ventana().
 			bnext=Button(axnext,"Siguiente")
 			bnext.on_clicked(self.siguiente)
 			bprev = Button(axprev,"Anterior")
@@ -143,7 +190,13 @@ class Graficador(object):
 			self.plt.show()
 
 
-
+	# Retorna un array de strings que representan los valores que se mostraran en el eje
+	# x e y. El paso se utiliza calcular la diferencia entre cada valor de la escala.
+	def configurar_valores_en_escala(self,minimo,maximo,paso):
+		escala = []
+		for i in range(minimo,maximo+1,paso):
+			escala.append(str(i))	
+		return escala		
 
 	# BACKUP!
 	# def graficar_diagrama(self):
