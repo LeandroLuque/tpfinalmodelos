@@ -16,7 +16,8 @@ from vista.vistaV2 import *
 """
 CANT_PACIENTES_INICIAL = 10
 CANT_EXPERIMENTO = 1 # years
-CANT_CORRIDAS = 10 * 1# DIAS
+CANT_CORRIDAS = 5# DIAS * MESES
+CANTIDAD_CAMAS = 250
 
 MAX_COLA_ESPERA_INTERNACION = 300
 cantidad_dias = 0
@@ -54,7 +55,7 @@ tiempos_anuales_sala_operaciones = []
 #TODOS PENDIENTES
 # -AGREGAR CONTADOR PARA CALCULAR LA CANTIDAD DE PACIENTES QUE ENTRARON AL HOSPITAL --> OK
 # -CALCULAR EL PORCENTAJE DE USO DE LA SALA DE OPERACIONES PARA MOSTRAR EN IMPIRMIR_ESTADISTICAS --> OK
-# -CORREGIR EL TIEMPO DE ESPERA DE LOS PACIENTES (TODOS UNOS!!)
+# -CORREGIR EL TIEMPO DE ESPERA DE LOS PACIENTES (TODOS UNOS!!) --> OK
 # -AGREGAR MAS QUIROFANOS PARA VER SI DISMINUYE LA CANTIDAD DE PACIENTES
 
 
@@ -100,39 +101,9 @@ def procesar_arribo(reloj, hospital, FEL):
             e = Evento("Paciente Internado",reloj.tiempo+1,paciente)
             FEL.agregar_evento(e)
         
-
         #TODO SACAR ESTE METODO UNA VEZ QUE ANDE LA SIMULACION!
-        hospital.mostrar_cant_camas_libres()
+        # hospital.mostrar_cant_camas_libres()
 
-# BACKUP!
-# def procesar_arribo(reloj, hospital, FEL):
-#     """
-#         Este metodo sirve para procesar el arribo de
-#         un paciente. Se crea el paciente y se lo agrega a la
-#         cola de espera para internacion del hospital
-#     :param reloj:
-#     :param hospital
-#     :return:
-#     """
-#     global pacientes_sin_operacion
-#     global pacientes_para_operacion
-#     global total_pacientes_ingresaron_hospital 
-#     if len(hospital.cola_espera_internacion) < MAX_COLA_ESPERA_INTERNACION:
-#         paciente = Paciente(reloj.tiempo)
-#         total_pacientes_ingresaron_hospital += 1
-#         if paciente.quirofano:
-#             pacientes_para_operacion += 1
-#         else:
-#             pacientes_sin_operacion += 1
-#         hospital.agregar_paciente_a_espera(paciente)
-#         if (hospital.tiene_cama_libre()):
-#             e = Evento("Paciente Internado",reloj.tiempo+1,paciente)
-#             FEL.agregar_evento(e)
-        
-
-
-
-    
 def procesar_internacion(reloj, hospital, FEL):
 
     if len(hospital.cola_espera_internacion) > 0:
@@ -164,9 +135,18 @@ def procesar_fin_internacion(reloj, hospital, FEL,paciente):
         FEL.agregar_evento(e)
 
 def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
+
     global tiempo_uso_sala_operaciones
     global tiempo_acumulado_sala_operaciones
     t = round(np.random.exponential(1 * 60))
+    p = None
+    paciente_alcanza_a_operarse = False
+
+    print ("En procesar_entrada_quirofano() para paciente %s ..." % paciente.nro_paciente)
+    print ("El paciente %s se alcanza a operar? : %s" % (paciente.nro_paciente,
+        (reloj.tiempo + t < paciente.tiempo_fin_espera_internacion + paciente.tiempo_internacion) ) )
+    print ("")
+
     if reloj.tiempo + t < paciente.tiempo_fin_espera_internacion + paciente.tiempo_internacion:
         e = Evento("Paciente Sale de Quirofano",reloj.tiempo+t,paciente)
         FEL.agregar_evento(e)
@@ -174,13 +154,43 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
         hospital.sala_operatoria.marcar_quirofano_ocupado()
         # Se establece el tiempo de inicio y de fin de uso quirofano.
         tiempo_uso_sala_operaciones += t
-
         tiempo_acumulado_sala_operaciones += tiempo_uso_sala_operaciones
-        # Si estoy en el ultimo dia del anio
-        print ("En procesar_entrada_quirofano() dia: %s" % cantidad_dias)
-        if (cantidad_dias % 360) == 0:
-            tiempos_anuales_sala_operaciones.append(tiempo_acumulado_sala_operaciones)
-            tiempo_acumulado_sala_operaciones = 0
+        print ("Paciente %s se puede operar, ingresando a quirofano ..." % paciente.nro_paciente)
+        print ("Cantidad de pacientes en cola espera operacion: %s" % 
+                    len(hospital.cola_espera_operacion))
+    else:
+        #Si el paciente pasado por parametro no es valido, se continuan sacando pacientes
+        # hasta que alguno pueda ser operado o hasta que la cola de espera de operacion
+        # se acabe
+        p = hospital.sacar_de_cola_espera_operacion()
+        print ("Paciente %s sacado de cola de espera." % p.nro_paciente)
+        print ("El paciente %s se alcanza a operar? : %s" % (p.nro_paciente,
+                (reloj.tiempo + t < p.tiempo_fin_espera_internacion + p.tiempo_internacion) ) )
+        print ("")
+
+        while len(hospital.cola_espera_operacion) > 0 and not paciente_alcanza_a_operarse:
+            if reloj.tiempo + t < p.tiempo_fin_espera_internacion + p.tiempo_internacion:
+                e = Evento("Paciente Sale de Quirofano",reloj.tiempo+t,p)
+                FEL.agregar_evento(e)
+                # Se marca un quirofano como ocupado.
+                hospital.sala_operatoria.marcar_quirofano_ocupado()
+                # Se establece el tiempo de inicio y de fin de uso quirofano.
+                tiempo_uso_sala_operaciones += t
+                tiempo_acumulado_sala_operaciones += tiempo_uso_sala_operaciones
+                paciente_alcanza_a_operarse = True
+                print ("Paciente %s se puede operar, ingresando a quirofano ..." % p.nro_paciente)
+                print ("Cantidad de pacientes en cola espera operacion: %s" % 
+                            len(hospital.cola_espera_operacion))
+            else:
+                p = hospital.sacar_de_cola_espera_operacion()
+
+
+    print ("Duracion de paciente sale de quirofano: %s; reloj.tiempo: %s" %
+     (float(reloj.tiempo + t),reloj.tiempo))
+    print ("Cola de operacion actualizada!")
+    print ("")
+    hospital.mostrar_cola_espera_operacion()
+
 
 
 def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
@@ -196,21 +206,25 @@ def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
     hospital.decrementar_cirugias_diarias()
     paciente.operado = True
     cantidad_pacientes_atendidos += 1
+    print ("En procesar_salida_quirofano() para paciente %s ..." % paciente.nro_paciente)
     print ("cantidad_pacientes_atendidos: %s" % cantidad_pacientes_atendidos)
     print ("")
     #Se verifica si la cant. de operaciones es mayor a cero, hay que planificar el prox. evento
     # de entrada a quirofano para el sig. paciente
     hospital.mostrar_cola_espera_operacion()
     p = hospital.sacar_de_cola_espera_operacion()
-    a = hospital.sala_operatoria.cant_cirugias_restantes_diarias
+    
+    #Se marca un quirofano como libre
+    print ("Quirofano liberado!")
+    hospital.sala_operatoria.marcar_quirofano_libre()
+
     print ("hospital.sala_operatoria.cant_cirugias_restantes_diarias: %s" % hospital.sala_operatoria.cant_cirugias_restantes_diarias)
     print ("")
     if hospital.sala_operatoria.cant_cirugias_restantes_diarias>0 and p is not None:
-        print ("Entrando al paciente %s al quirofano" % paciente.nro_paciente)
+        print ("Entrando al nuevo paciente %s al quirofano en tiempo %s" % 
+                    (paciente.nro_paciente,reloj.tiempo+1) )
         print ("")
         e=Evento("Paciente Entra a Quirofano",reloj.tiempo+1,p)
-        #Se marca un quirofano como libre
-        hospital.sala_operatoria.marcar_quirofano_libre()
         FEL.agregar_evento(e)
 
 
@@ -222,13 +236,20 @@ def procesar_apertura_so(reloj, hospital, FEL):
     :param FEL:
     :return:
     """
+    print ("Cola inicial del dia %s es -->" % (cantidad_dias) )
+    hospital.mostrar_cola_espera_operacion()
+    print ("")
     e = Evento("Cierre de Sala de Operaciones",reloj.tiempo+12*60)
     FEL.agregar_evento(e)
     hospital.abrir_sala_operaciones()
     hospital.calcular_cirugias_diarias()
     print ("Cantidad de cirugias diarias para el dia %s son: %s" % (cantidad_dias,hospital.sala_operatoria.cant_cirugias_restantes_diarias))
     quirofanos = hospital.sala_operatoria.quirofanos
+    print ("Pacientes restantes en hospital.cola_espera_operacion: %s" %
+                len(hospital.cola_espera_operacion))
+    print ("")
     if (len(hospital.cola_espera_operacion) > 0):
+        hospital.sala_operatoria.mostrar_quirofanos(estado_ocupado=True)
         for q in quirofanos:
             if (not q.ocupado):
                 p = hospital.sacar_de_cola_espera_operacion()
@@ -290,7 +311,7 @@ if __name__ == '__main__':
 
     FEL = FEL()
     reloj = Reloj()
-    hospital = Hospital(120,2)
+    hospital = Hospital(CANTIDAD_CAMAS,2)
     inicializar_simulacion(FEL, reloj)
     #global cantidad_pacientes_atendidos
     #global cantidad_pacientes_no_atendidos
@@ -317,6 +338,8 @@ if __name__ == '__main__':
             procesar_entrada_quirofano(reloj, hospital, FEL, evento.paciente)
 
         elif evento.tipo == "Paciente Sale de Quirofano":
+            print ("Evento Paciente Sale de quirofano con paciente %s en tiempo %s" %
+                (evento.paciente.nro_paciente,evento.tiempo))
             procesar_salida_quirofano(reloj, hospital, FEL, evento.paciente)
 
         elif evento.tipo == "Apertura de Sala de Operaciones":
@@ -331,6 +354,11 @@ if __name__ == '__main__':
             FEL.agregar_evento(evento)
             agregar_nuevos_pacientes(FEL)
             print ("Nuevo dia! La cantidad de dias actual es: %s" % cantidad_dias)
+            print ("Tiempo del nuevo dia: %s" % int(reloj.tiempo+1440) )
+            hospital.sala_operatoria.mostrar_quirofanos(estado_ocupado=True)
+            for q in hospital.sala_operatoria.quirofanos:
+                print (q)
+            print ("")
 
     #Se obtienen las varaibles de estado de las colas de espera de internacion y operacion
     cantidad_pacientes_para_internar = 0

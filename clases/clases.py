@@ -293,12 +293,10 @@ class SalaOperatoria:
 
     def __init__(self, cantidad_quirofanos):
         self.cola_operacion = []
-        self.quirofanos = [ Quirofano() , Quirofano() ]
+        self.quirofanos = [ Quirofano(1) , Quirofano(2) ]
         self.cerrado = False
         #
         self.cant_cirugias_restantes_diarias = 0
-
-
 
     @property
     def quirofanos(self):
@@ -328,30 +326,51 @@ class SalaOperatoria:
     # SalaOperatoria.calcular_cirugias_diarias()
     def calcular_cirugias_diarias(self):
         self.cant_cirugias_restantes_diarias = round(np.random.poisson(10))
-        print (" En calcular_cirugias_diarias()")
-        print (" cantidad de cirugias restantes diarias: %s" % self.cant_cirugias_restantes_diarias)
-        print ("")
+        print (" En calcular_cirugias_diarias() ... ")
+        # print (" Cantidad de cirugias restantes diarias: %s" % self.cant_cirugias_restantes_diarias)
+        # print ("")
 
     # SalaOperatoria.calcular_cirugias_diarias()
     def decrementar_cirugias_diarias(self):
-        self.cant_cirugias_restantes_diarias -= 1
+        if self.cant_cirugias_restantes_diarias>0:
+            self.cant_cirugias_restantes_diarias -= 1
 
     def marcar_quirofano_ocupado(self):
         for q in self.quirofanos:
-            if not q.esta_ocupado:
-                q.esta_ocupado=True
+            if not q.ocupado:
+                q.ocupado=True
                 break
+        print ("Quirofanos actualizados en marcar_quirofano_ocupado(): ")
+        for q in self.quirofanos:
+            print (q)
+        print ("")
 
     def marcar_quirofano_libre(self):
         for q in self.quirofanos:
-            if q.esta_ocupado:
-                q.esta_ocupado=False
+            if q.ocupado:
+                q.ocupado=False
                 break
+        print ("Quirofanos actualizados en marcar_quirofano_libre(): ")
+        for q in self.quirofanos:
+            print (q)
+        print ("")
+        
+
+    # Se muestran los quirofanos segun el estado que se desea
+    def mostrar_quirofanos(self,estado_ocupado=False):
+        cant = 0
+        for quirofano in self.quirofanos:
+            if quirofano.ocupado == estado_ocupado:
+                cant += 1
+        print ("La cantidad de quirofanos ocupados es: %s " % cant)
+
+
 
 class Quirofano(object):
 
-    def __init__(self):
+    def __init__(self,nro):
         self.ocupado = False
+        self.nro = nro
     #     self.posicion= Posicion(x,y)
 
     @property
@@ -364,6 +383,11 @@ class Quirofano(object):
 
     def esta_ocupado(self):
         return self.ocupado
+
+
+    def __str__(self):
+        return "Estado del quirofano %s es: ocupado= %s" % (self.nro,self.ocupado)
+
 
     # def getX(self):
     #     return self.posicion.getX()
