@@ -15,7 +15,7 @@ from vista.vistaV2 import *
     Constantes para la simulacion del sistema
 """
 CANT_PACIENTES_INICIAL = 10
-CANT_EXPERIMENTO = 5 # years
+CANT_EXPERIMENTO = 30 # years
 CANT_CORRIDAS = 365 # DIAS * MESES
 CANTIDAD_CAMAS = 250
 
@@ -353,15 +353,22 @@ def recolectar_pacientes():
     global acumulado_anual_pacientes_operados
     global acumulado_anual_pacientes_no_operados
     pacientes_anuales_operados.append(acumulado_anual_pacientes_operados)
-    acumulado_anual_pacientes_operados = 0
     pacientes_anuales_no_operados.append(acumulado_anual_pacientes_no_operados)
-    acumulado_anual_pacientes_no_operados=0
+    # acumulado_anual_pacientes_operados = 0
+    # acumulado_anual_pacientes_no_operados=0
 
 def recolectar_tiempos_espera():
     global acumulado_anual_tiempos_espera
     global tiempos_anuales_espera_pacientes
-    tiempos_anuales_espera_pacientes.append(acumulado_anual_tiempos_espera)
+    global acumulado_anual_pacientes_operados
+    global acumulado_anual_pacientes_no_operados
+    tiempos_anuales_espera_pacientes.append(
+        acumulado_anual_tiempos_espera/(acumulado_anual_pacientes_no_operados+acumulado_anual_pacientes_operados))
     acumulado_anual_tiempos_espera = 0
+    acumulado_anual_pacientes_operados = 0
+    acumulado_anual_pacientes_no_operados = 0
+
+
 
 
 def generar_diagramas(porcentaje_uso_so):
@@ -372,6 +379,9 @@ def generar_diagramas(porcentaje_uso_so):
     print ("pacientes_anuales_no_operados: %s"  % pacientes_anuales_no_operados)
     print ("")
 
+
+
+
     g = Graficador(plt)
     histograma_tiempos_espera={
         "tipo":HISTOGRAMA,
@@ -381,10 +391,10 @@ def generar_diagramas(porcentaje_uso_so):
         # "datos_x":tiempos_de_espera_pacientes,
         "datos_x":tiempos_anuales_espera_pacientes,
         #[minX,minY,maxX,maxY]
-        "limites_histograma":[30000,0, 40000, 10],
+        "limites_histograma":[0,0, 3, 5],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
-        "paso_x": 2000,
+        "paso_x": 1,
         "paso_y": 1
     }
 
