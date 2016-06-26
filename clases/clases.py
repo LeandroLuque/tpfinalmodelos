@@ -3,8 +3,27 @@ __author__ = 'leandro'
 
 from collections import deque
 import numpy as np
+import time
 
 #from vista import Posicion
+""" Notifica a la vista cuando ocurre un cambio en el modelo. """
+class Observable(object):
+
+    def __init__(self,vista):
+        self.vista = vista
+
+    def notificar_evento(self,evento,dic_atributos=None):
+        if evento == "Arribo de Paciente":
+            self.vista.getColaEspera().incrementar(dic_atributos["valor"])
+        elif evento == "Paciente Internado":
+            self.vista.getColaEspera().decrementar(dic_atributos["valor"])
+            self.vista.getColaEsperaOperacion().incrementar(dic_atributos["valor2"])
+        elif evento == "Paciente Entra a Quirofano":
+            self.vista.getColaEsperaOperacion().decrementar(dic_atributos["valor"])
+        elif evento == "Paciente Sale de Quirofano":
+            pass
+
+
 
 class Evento(object):
 
@@ -293,7 +312,11 @@ class SalaOperatoria:
 
     def __init__(self, cantidad_quirofanos):
         self.cola_operacion = []
-        self.quirofanos = [ Quirofano(1) , Quirofano(2) ]
+        # self.quirofanos = [ Quirofano(1) , Quirofano(2) ]
+        self.quirofanos = []
+        for i in range(1,cantidad_quirofanos+1):
+            self.quirofanos.append(Quirofano(i))
+        print ("Se agregaron %s quirofanos a la simulacion " % len(self.quirofanos))
         self.cerrado = False
         #
         self.cant_cirugias_restantes_diarias = 0

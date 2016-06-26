@@ -1,11 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Button
+import matplotlib.widgets
+# from matplotlib.widgets import Button
 from threading import Thread
 
 # Constantes para el graficador
 HISTOGRAMA="Histograma"
 DIAGRAMA_TORTA="Diagrama de torta"
+
+import Tkinter
+from ttk import Frame
+
+from ttk import Frame, Button, Label
+from Tkinter import Tk, BOTH
+import tkMessageBox as mbox
+import threading
 
 
 class Graficador(object):
@@ -53,9 +62,9 @@ class Graficador(object):
 		axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
 		# Se crea el objeto indice que maneja los eventos y el redibujado
 		# de los inicializar_ventana().
-		bnext=Button(axnext,"Siguiente")
+		bnext = matplotlib.widgets.Button(axnext,"Siguiente")
 		bnext.on_clicked(self.siguiente)
-		bprev = Button(axprev,"Anterior")
+		bprev = matplotlib.widgets.Button(axprev,"Anterior")
 		bprev.on_clicked(self.anterior)
 
 		#Sei dibuja el diagrama actual segun el nro de indice
@@ -151,9 +160,9 @@ class Graficador(object):
 			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
 			# Se crea el objeto indice que maneja los eventos y el redibujado
 			# de los inicializar_ventana().
-			bnext=Button(axnext,"Siguiente")
+			bnext = matplotlib.widgets.Button(axnext,"Siguiente")
 			bnext.on_clicked(self.siguiente)
-			bprev = Button(axprev,"Anterior")
+			bprev = matplotlib.widgets.Button(axprev,"Anterior")
 			bprev.on_clicked(self.anterior)
 			# Se dibujan los cambios en el grafico
 			self.plt.draw()
@@ -181,9 +190,9 @@ class Graficador(object):
 			axnext = self.plt.axes([0.8, 0.08, 0.1, 0.075])
 			# # Se crea el objeto indice que maneja los eventos y el redibujado
 			# # de los inicializar_ventana().
-			bnext=Button(axnext,"Siguiente")
+			bnext = matplotlib.widgets.Button(axnext,"Siguiente")
 			bnext.on_clicked(self.siguiente)
-			bprev = Button(axprev,"Anterior")
+			bprev = matplotlib.widgets.Button(axprev,"Anterior")
 			bprev.on_clicked(self.anterior)
 
 			self.plt.draw()
@@ -198,38 +207,45 @@ class Graficador(object):
 			escala.append(str(i))	
 		return escala		
 
-	# BACKUP!
-	# def graficar_diagrama(self):
-	# 	print "Graficando histograma actual en self.indice: %s " % self.indice
-	# 	print "..."
-	# 	# Se accede al primer subplot creado anteriormente
-	# 	self.plt.subplot(111)
-	# 	if self.dic_datos_graficos[self.indice]["tipo"] == HISTOGRAMA:
-	# 		self.plt.clf()
-	# 		#Se configura el subplot que contiene los botones de la GUI	
-	# 		self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
-	# 		self.plt.xlabel(self.dic_datos_graficos[self.indice]["label_x"]) 
-	# 		self.plt.ylabel(self.dic_datos_graficos[self.indice]["label_y"])
-	# 		#[minX,minY,maxX,maxY]
-	# 		self.plt.axis(self.dic_datos_graficos[self.indice]["limites_histograma"])
+class VentanaResultados(Frame):
+  
+	def __init__(self, parent,valores_estadisticos):
+		Frame.__init__(self, parent)
+		self.parent = parent        
+		self.initUI(valores_estadisticos)
+		self.parent.resizable(width=True, height=False)
+		self.parent.minsize(700,500)
+		self.parent.maxsize(1500,500)
+		  
+	def initUI(self,valores_estadisticos):
+		self.parent.title("Resultados estadisticos de la simulacion")    
+		self.pack()
+		#El widget principal tiene 5 filas y dos columnas
+		g=self.grid(row=3, column=3)
+		self.parent.config(bg = "white")
+		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l["background"] = "white"
+		l.pack(fill="x")
+		l = Label(self, text="Estadisticas de la simulacion",font=("Helvetica", 17))
+		l["background"] = "white"
+		l.pack(fill="x")
+		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l["background"] = "white"
+		l.pack(fill="x")
+		for label in valores_estadisticos:
+			l = Label(self, text=label,font=("Helvetica", 14) )
+			l["background"] = "white"
+			l.pack(fill="x")
 
-	# 		self.plt.hist(self.dic_datos_graficos[self.indice]["datos_x"],
-	# 			50, facecolor='blue',range=(1,100), alpha=0.75)
+		l = Label(self, text="",font=("Helvetica", 16))
+		l["background"] = "white"
+		l.pack(fill="x")
+		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l["background"] = "white"
+		l.pack(fill="x")
 
-	# 	elif self.dic_datos_graficos[self.indice]["tipo"] == DIAGRAMA_TORTA:
-	# 		self.plt.subplot(111)
-	# 		self.plt.cla()
-	# 		self.plt.title(self.dic_datos_graficos[self.indice]["titulo"])
-	# 		self.plt.pie(self.dic_datos_graficos[self.indice]["datos"],
-	# 			labels = self.dic_datos_graficos[self.indice]["labels"],
-	# 			explode = self.dic_datos_graficos[self.indice]["explode"],
-	# 			labeldistance=.2,
-	# 			shadow=True,
-	# 			autopct=self.make_autopct(
-	# 						self.dic_datos_graficos[self.indice]["porcentajes"]) )
-			
-		
-	# 	self.plt.draw()
+	def mostrar(self):
+		self.parent.mainloop()	
 
 
 def main():

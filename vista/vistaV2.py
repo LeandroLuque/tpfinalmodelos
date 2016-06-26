@@ -3,7 +3,6 @@ import pygame,sys
 from pygame.locals import *
 
 
-
 #Constantes de estado de quirofano
 ESTADO_ABIERTO=1
 ESTADO_CERRADO=0
@@ -21,8 +20,8 @@ TAMANIO_ESCALA=.15
 
 
 
-
 class Canvas:
+
 	def __init__(self,pygame):
 		self.simulacionTerminada=False
 		self.posicion=Posicion(100,100)
@@ -31,20 +30,26 @@ class Canvas:
 		self.pygame=pygame
 		self.pantalla=None
 		self.fondo=None
-		self.imagen="fondo1.jpg"
+		self.imagen="vista/fondo1.jpg"
 		self.inicializar()
 		#Quirofano(nombre,X,Y,pygame)
-		self.q1=Quirofano("Quirofano Q1","quirofanoImg.png",700,100,self.pygame)
-		self.q2=Quirofano("Quirofano Q2","quirofanoImg.png",700,550,self.pygame)
+		self.q1=Quirofano("Quirofano Q1","vista/quirofanoImg.png",700,100,self.pygame)
+		self.q2=Quirofano("Quirofano Q2","vista/quirofanoImg.png",700,550,self.pygame)
 
 		self.q2.agregarPropiedad("porcent","Porcentaje actual de uso ",700,650)
 		#ColaEspera(Nombre,X,Y,pygame)
 		self.colaEsperaEntradaPacientes=ColaEspera("Pacientes esperando internacion",
-			"pacientesEsperando.jpg",50,200,pygame)
+			"vista/pacientesEsperando.jpg",50,200,pygame)
 
 		self.colaEsperaParaCirugia=ColaEspera("Pacientes esperando cirugia",
-			"esperandoCirugia.png",400,200,pygame,tamanioColaMax=True)
+			"vista/esperandoCirugia.png",400,200,pygame)
 		self.redibujar()
+
+	def getColaEspera(self):
+		return self.colaEsperaEntradaPacientes
+
+	def getColaEsperaOperacion(self):
+		return self.colaEsperaParaCirugia
 		
 	# Metodos getters y setters de Quirofano
 	def getQuirofano1(self):
@@ -65,8 +70,6 @@ class Canvas:
 		
 	#Este metodo redibuja todos los componetnes de la GUI
 	def redibujar(self):
-		print "Redibujando elementos..."
-		print ""
 		self.pantalla.blit(self.fondo, (ORIGEN_X,ORIGEN_Y))
 		# Redibujamos todos los elementos de la pantalla
 
@@ -84,6 +87,10 @@ class Canvas:
 	def estaSimulacionTerminada(self):
 		return self.simulacionTerminada
 
+
+	def terminar_simulacion(self):
+		self.simulacionTerminada = True
+
 	#Bucle infinito que muestra la ventana de pygame
 	def mostrar(self):
 		contadorColaLlegada=0
@@ -96,44 +103,43 @@ class Canvas:
 					print "Cerrando la ventana ..."
 					print ""
 					sys.exit()
-
 			self.redibujar()
-			self.probarQuirofanos(contadorColaLlegada)
-			contadorColaLlegada=self.probarColaLlegadaPositiva(contadorColaLlegada)
-			contadorColaCirugia=self.probarColaCirugiaNegativa(contadorColaCirugia)
+			# self.probarQuirofanos(contadorColaLlegada)
+			# contadorColaLlegada=self.probarColaLlegadaPositiva(contadorColaLlegada)
+			# contadorColaCirugia=self.probarColaCirugiaNegativa(contadorColaCirugia)
 			# contador=self.probarColaLlegadaNegativa(contadorColaLlegada)
 			print "--------------------------------"
 
 
-	def probarQuirofanos(self,cont):
-		#time.sleep(1)
-		self.getQuirofano1().actualizarEstado()
-		self.getQuirofano2().actualizarEstado()
-		self.getQuirofano2().actualizarPropiedad("porcent",str(cont)+" %")
+	# def probarQuirofanos(self,cont):
+	# 	#time.sleep(1)
+	# 	self.getQuirofano1().actualizarEstado()
+	# 	self.getQuirofano2().actualizarEstado()
+	# 	self.getQuirofano2().actualizarPropiedad("porcent",str(cont)+" %")
 
-	def probarColaLlegadaPositiva(self,contador):
-		aux=contador+1
-		self.colaEsperaEntradaPacientes.incrementar(contador)
-		time.sleep(.2)
-		return aux
+	# def probarColaLlegadaPositiva(self,contador):
+	# 	aux=contador+1
+	# 	self.colaEsperaEntradaPacientes.incrementar(contador)
+	# 	time.sleep(.2)
+	# 	return aux
 
-	def probarColaLlegadaNegativa(self,contador):
-		aux=contador-1
-		self.colaEsperaEntradaPacientes.decrementar(contador)
-		time.sleep(.3)
-		return aux
+	# def probarColaLlegadaNegativa(self,contador):
+	# 	aux=contador-1
+	# 	self.colaEsperaEntradaPacientes.decrementar(contador)
+	# 	time.sleep(.3)
+	# 	return aux
 
-	def probarColaCirugiaPositiva(self,contador):
-		aux=contador+1
-		self.colaEsperaParaCirugia.incrementar(contador)
-		time.sleep(.2)
-		return aux
+	# def probarColaCirugiaPositiva(self,contador):
+	# 	aux=contador+1
+	# 	self.colaEsperaParaCirugia.incrementar(contador)
+	# 	time.sleep(.2)
+	# 	return aux
 
-	def probarColaCirugiaNegativa(self,contador):
-		aux=contador-1
-		self.colaEsperaParaCirugia.decrementar(contador)
-		time.sleep(.3)
-		return aux
+	# def probarColaCirugiaNegativa(self,contador):
+	# 	aux=contador-1
+	# 	self.colaEsperaParaCirugia.decrementar(contador)
+	# 	time.sleep(.3)
+	# 	return aux
 
 
 class Quirofano(pygame.sprite.Sprite):
@@ -160,6 +166,9 @@ class Quirofano(pygame.sprite.Sprite):
 		#Diccionario de lables para agregar a la cola de espera
 		self.labels={}
 
+
+	def getEstado(self):
+		return self.estado
 
 	#Agrega una propiedad tipo cadena  a la interfaz grafica del componente
 	def agregarPropiedad(self,nombreLabel,texto,x,y):
@@ -277,7 +286,7 @@ class ColaEspera(pygame.sprite.Sprite):
 		if self.topeSuperiorBarra <= 200:
 			self.topeSuperiorBarra=200
 			self.limiteInferiorBarra=199
-		self.cantPersonas=valor
+		self.cantPersonas = valor
 
 	#Se decrementa el tamanio de la cola (se aumenta la distancia del valor Y
 	# del eje de coordenadas)
@@ -346,30 +355,17 @@ class Posicion:
 	def getY(self):
 		return self.y
 
+
+
  
-def main():
-	c=Canvas(pygame)
-	c.mostrar()
+# def main():
+# 	c=Canvas(pygame)
+# 	# c.mostrar()
+# 	t = Thread(target=c.mostrar)
+# 	# t.daemon = True
+# 	t.start()
+# 	print ("Despues de mostrar!!!")
+# 	print ("")
 
-if __name__ == "__main__":
-    main()
-
-
-# Ejemplo de creacion de sprites con o sin imagenes.
-#
-# class Block(pygame.sprite.Sprite):
-
-#     # Constructor. Pass in the color of the block,
-#     # and its x and y position
-#     def __init__(self, color, width, height):
-#        # Call the parent class (Sprite) constructor
-#        pygame.sprite.Sprite.__init__(self)
-
-#        # Create an image of the block, and fill it with a color.
-#        # This could also be an image loaded from the disk.
-#        self.image = pygame.Surface([width, height])
-#        self.image.fill(color)
-
-#        # Fetch the rectangle object that has the dimensions of the image
-#        # Update the position of this object by setting the values of rect.x and rect.y
-#        self.rect = self.image.get_rect()
+# if __name__ == "__main__":
+#     main()
