@@ -9,18 +9,21 @@ from clases import Evento
 from clases import FEL
 from clases import Paciente
 from clases import Hospital
-# from clases import Observable
+from clases import Observable
 
 from utilidades.utilidades import *
 from vista.vistaV2 import *
+import threading
+from threading import Thread
 
 import math
+
 
 """
     Constantes para la simulacion del sistema
 """
 CANT_PACIENTES_INICIAL = 10
-CANT_EXPERIMENTO = 10 # years
+CANT_EXPERIMENTO = 5 # years
 CANT_CORRIDAS = 365 # DIAS * MESES
 CANTIDAD_CAMAS = 250
 
@@ -116,11 +119,12 @@ def procesar_arribo(reloj, hospital, FEL):
         if (hospital.tiene_cama_libre()):
             e = Evento("Paciente Internado",reloj.tiempo+1,paciente)
             FEL.agregar_evento(e)
-        
-        #TODO SACAR ESTE METODO UNA VEZ QUE ANDE LA SIMULACION!
-        # hospital.mostrar_cant_camas_libres()
+        # obs.notificar_evento("Arribo de Paciente",{"valor":len(hospital.cola_espera_internacion)})
 
-def procesar_internacion(reloj, hospital, FEL):
+
+        
+
+def procesar_internacion(reloj, hospital, FEL,obs=None):
     global acumulado_anual_tiempos_espera
     if len(hospital.cola_espera_internacion) > 0:
         paciente = hospital.sacar_paciente_de_espera()
@@ -139,10 +143,11 @@ def procesar_internacion(reloj, hospital, FEL):
         FEL.agregar_evento(e)
         tiempos_de_espera_pacientes.append(paciente.tiempo_espera())
         acumulado_anual_tiempos_espera += paciente.tiempo_espera()
-
+        # obs.notificar_evento("Paciente Internado",{"valor":len(hospital.cola_espera_internacion),
+        #                                            "valor2":len(hospital.cola_espera_operacion)})
     
 
-def procesar_fin_internacion(reloj, hospital, FEL,paciente):
+def procesar_fin_internacion(reloj, hospital, FEL,paciente,obs=None):
     global cantidad_pacientes_no_atendidos
     global acumulado_anual_pacientes_no_operados
     hospital.alta_paciente(paciente.nro_paciente)
@@ -155,7 +160,7 @@ def procesar_fin_internacion(reloj, hospital, FEL,paciente):
         e =  Evento("Paciente Internado",reloj.tiempo+1,p)
         FEL.agregar_evento(e)
 
-def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
+def procesar_entrada_quirofano(reloj, hospital, FEL,paciente,obs=None):
 
     global tiempo_uso_sala_operaciones
     global acumulado_anual_uso_sala_operaciones
@@ -181,8 +186,7 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
                     len(hospital.cola_espera_operacion))
         
         #Se recolectan los tiempos anuales 
-        acumulado_anual_uso_sala_operaciones += t
-                    
+        acumulado_anual_uso_sala_operaciones += t                   
     else:
         #Si el paciente pasado por parametro no es valido, se continuan sacando pacientes
         # hasta que alguno pueda ser operado o hasta que la cola de espera de operacion
@@ -210,7 +214,7 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
             else:
                 p = hospital.sacar_de_cola_espera_operacion()
 
-
+    # obs.notificar_evento("Paciente Entra a Quirofano",{"valor":len(hospital.cola_espera_operacion)})
     print ("Duracion de paciente sale de quirofano: %s; reloj.tiempo: %s" %
      (float(reloj.tiempo + t),reloj.tiempo))
     print ("Cola de operacion actualizada!")
@@ -219,7 +223,7 @@ def procesar_entrada_quirofano(reloj, hospital, FEL,paciente):
 
 
 
-def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
+def procesar_salida_quirofano(reloj, hospital, FEL, paciente,obs=None):
     """
         Metodo que procesa el evento de Salida de Quirofano
     :param reloj:
@@ -241,6 +245,9 @@ def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
     #Se verifica si la cant. de operaciones es mayor a cero, hay que planificar el prox. evento
     # de entrada a quirofano para el sig. paciente
     # hospital.mostrar_cola_espera_operacion()
+
+    # obs.notificar_evento("Paciente Sale de Quirofano",{})
+
     p = hospital.sacar_de_cola_espera_operacion()
     
     #Se marca un quirofano como libre
@@ -257,7 +264,7 @@ def procesar_salida_quirofano(reloj, hospital, FEL, paciente):
         FEL.agregar_evento(e)
 
 
-def procesar_apertura_so(reloj, hospital, FEL):
+def procesar_apertura_so(reloj, hospital, FEL,obs=None):
     """
         Metodo que controla la apertura de la Sala de Operaciones
     :param reloj:
@@ -287,7 +294,7 @@ def procesar_apertura_so(reloj, hospital, FEL):
                 FEL.agregar_evento(e)
 
 
-def procesar_cierre_so(reloj, hospital, FEL):
+def procesar_cierre_so(reloj, hospital, FEL,obs=None):
     hospital.sala_operatoria.cerrado = True
     e = Evento("Apertura de Sala de Operaciones", reloj.tiempo+12*60)
     FEL.agregar_evento(e)
@@ -383,6 +390,7 @@ def generar_diagramas(porcentaje_uso_so):
     print ("pacientes_anuales_operados: %s"  % pacientes_anuales_operados)
     print ("pacientes_anuales_no_operados: %s"  % pacientes_anuales_no_operados)
     print ("")
+
     g = Graficador(plt)
     histograma_tiempos_espera={
         "tipo":HISTOGRAMA,
@@ -456,15 +464,17 @@ def generar_diagramas(porcentaje_uso_so):
     # # Se inicializa la ventana y se muestra una vez que se cargan los datos
     g.inicializar_ventana()
 
+
+
 def calcular_intervalo_confianza(tiempos_anuales_espera_pacientes):
     prom = np.mean(tiempos_anuales_espera_pacientes)
     desvio_std = math.sqrt(np.var(tiempos_anuales_espera_pacientes))
-    intervalo_confianza=1.96 # 95% de confianza
+    intervalo_confianza=2.57 # 95% de confianza
     
-    str_promedio = "El promedio anual de los tiempos de espera de pacientes es: %s " % prom
+    str_promedio = "El promedio anual de los tiempos de espera de pacientes es: " % prom
     str_intervalo_confianza_calculo = "El intervalo de confianza de los tiempos de espera se encuentra definido entre los valores: %s - 2.57 * %s <= %s <= %s + 2.57 * %s" %( ( prom, desvio_std,prom,prom,desvio_std ))
 
-    str_intervalo_confianza_numeros = "El intervalo de confianza de los tiempos de espera se encuentra definido entre: %s <= %s <= %s" %((prom - 2.57* desvio_std),(prom),(prom + 2.57* desvio_std) )
+    str_intervalo_confianza_numeros = "El intervalo de confianza de los tiempos de espera se encuentra definido entre: %s <= %s <= %s" %((prom + 2.57* desvio_std),(prom),(prom - 2.57* desvio_std) )
 
     print ("")
     print ("========================================================")
@@ -481,20 +491,21 @@ def calcular_intervalo_confianza(tiempos_anuales_espera_pacientes):
                                 ])
     ex.mostrar()
 
-
-
-
 if __name__ == '__main__':
-
     FEL = FEL()
     reloj = Reloj()
     hospital = Hospital(CANTIDAD_CAMAS,2)
     inicializar_simulacion(FEL, reloj)
+
+    # v=Canvas(pygame)
+    # t = Thread(target=v.mostrar)
+    # t.daemon = True
+    # t.start()
+    # obs = Observable(v)
+
     #global cantidad_pacientes_atendidos
     #global cantidad_pacientes_no_atendidos
     global cantidad_dias
-    global tiempos_anuales_espera_pacientes
-
     cantidad_experimentos = 1
     while cantidad_experimentos <= CANT_EXPERIMENTO:
         print ("Cantidad de experimentos actual %s" % cantidad_experimentos)
@@ -508,20 +519,24 @@ if __name__ == '__main__':
 
             if evento.tipo == "Arribo de Paciente":
                 procesar_arribo(reloj, hospital, FEL)
+                # procesar_arribo(reloj, hospital, FEL,obs)
 
             elif evento.tipo == "Paciente Internado":
                 procesar_internacion(reloj, hospital, FEL)
+                # procesar_internacion(reloj, hospital, FEL,obs)
 
             elif evento.tipo == "Fin Paciente Internado":
                 procesar_fin_internacion(reloj, hospital, FEL,evento.paciente)
+                # procesar_fin_internacion(reloj, hospital, FEL,evento.paciente,obs)
 
             elif evento.tipo == "Paciente Entra a Quirofano":
                 procesar_entrada_quirofano(reloj, hospital, FEL, evento.paciente)
+                # procesar_entrada_quirofano(reloj, hospital, FEL, evento.paciente,obs)
 
             elif evento.tipo == "Paciente Sale de Quirofano":
                 print ("Evento Paciente Sale de quirofano con paciente %s en tiempo %s" %
                     (evento.paciente.nro_paciente,evento.tiempo))
-                procesar_salida_quirofano(reloj, hospital, FEL, evento.paciente)
+                # procesar_salida_quirofano(reloj, hospital, FEL, evento.paciente,obs)
 
             elif evento.tipo == "Apertura de Sala de Operaciones":
                 procesar_apertura_so(reloj, hospital, FEL)
@@ -552,9 +567,12 @@ if __name__ == '__main__':
                 for q in hospital.sala_operatoria.quirofanos:
                     print (q)
                 print ("")
+            # time.sleep(.07)
 
         cantidad_experimentos += 1
 
+    # # v.terminar_simulacion()
+    
     #Se obtienen las varaibles de estado de las colas de espera de internacion y operacion
     cantidad_pacientes_para_internar = 0
     cantidad_pacientes_para_operar = 0
@@ -581,10 +599,11 @@ if __name__ == '__main__':
     print ("pacientes anuales operados: %s " % pacientes_anuales_operados)
     print ("pacientes anuales no operados: %s " % pacientes_anuales_no_operados)
     print ("")
-    # generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100
+
     #Hijo
     if os.fork() == 0:
         generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100)
     else:
         calcular_intervalo_confianza(tiempos_anuales_espera_pacientes)
+
 

@@ -223,13 +223,13 @@ class VentanaResultados(Frame):
 		#El widget principal tiene 5 filas y dos columnas
 		g=self.grid(row=3, column=3)
 		self.parent.config(bg = "white")
-		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l = Label(self, text="========================================================================================================================",font=("Helvetica", 16))
 		l["background"] = "white"
 		l.pack(fill="x")
 		l = Label(self, text="Estadisticas de la simulacion",font=("Helvetica", 17))
 		l["background"] = "white"
 		l.pack(fill="x")
-		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l = Label(self, text="========================================================================================================================",font=("Helvetica", 16))
 		l["background"] = "white"
 		l.pack(fill="x")
 		for label in valores_estadisticos:
@@ -240,7 +240,7 @@ class VentanaResultados(Frame):
 		l = Label(self, text="",font=("Helvetica", 16))
 		l["background"] = "white"
 		l.pack(fill="x")
-		l = Label(self, text="========================================================",font=("Helvetica", 16))
+		l = Label(self, text="========================================================================================================================",font=("Helvetica", 16))
 		l["background"] = "white"
 		l.pack(fill="x")
 
