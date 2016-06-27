@@ -543,12 +543,12 @@ def calcular_intervalo_confianza(tiempos_anuales_espera_pacientes):
 
     str_intervalo_confianza_numeros = "El intervalo de confianza de los tiempos de espera se encuentra definido entre: %s <= %s <= %s" %((prom - 2.57* desvio_std),(prom),(prom + 2.57* desvio_std) )
 
-    #print ("")
-    #print ("========================================================")
-    #print (str_promedio)
-    #print (str_intervalo_confianza_calculo)
-    #print (str_intervalo_confianza_numeros)
-    #print ("========================================================")
+    print ("")
+    print ("========================================================")
+    print (str_promedio)
+    print (str_intervalo_confianza_calculo)
+    print (str_intervalo_confianza_numeros)
+    print ("========================================================")
     root = Tk()
     # labels_estadisticos=["El promedio de tiempos de espera es: 12",
     # "El intervalo de confianza se encuentra definido entre: 2.3<= 2.5 <=2.6"]
@@ -578,7 +578,7 @@ if __name__ == '__main__':
         #print ("")
         print ("--> NUEVO EXPERIMENTO: %s" % cantidad_experimentos)
         while (cantidad_dias <= CANT_CORRIDAS):
-            # print ("========DIA %d=============" % cantidad_dias)
+            print ("========DIA %d=============" % cantidad_dias)
             # FEL.mostrar_eventos()
             #print("============================")
 
@@ -665,12 +665,11 @@ if __name__ == '__main__':
                             cantidad_pacientes_para_operar,
                             cantidad_pacientes_FEL)
     
-    #print (" ********************************************************************* ")
-    #print ("tiempos de uso anuales de sala operaciones : %s" % tiempos_anuales_sala_operaciones)
-    #print ("pacientes anuales operados: %s " % pacientes_anuales_operados)
-    #print ("pacientes anuales no operados: %s " % pacientes_anuales_no_operados)
-    #print ("")
-    # generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100
+    # print (" ********************************************************************* ")
+    # print ("tiempos de uso anuales de sala operaciones : %s" % tiempos_anuales_sala_operaciones)
+    # print ("pacientes anuales operados: %s " % pacientes_anuales_operados)
+    # print ("pacientes anuales no operados: %s " % pacientes_anuales_no_operados)
+    # print ("")
     #Hijo
     if os.fork() == 0:
         generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100)
