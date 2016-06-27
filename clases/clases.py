@@ -209,10 +209,6 @@ class Hospital(object):
             la cola de intenacion
         """
         return self.cola_espera_internacion.popleft()
-        # if len(self.cola_espera_internacion) == 0:
-        #     return None
-        # else:
-        #     return self.cola_espera_internacion.popleft()
 
 
     def agregar_a_cola_espera_operacion(self,paciente):
@@ -294,6 +290,16 @@ class Hospital(object):
         for p in self.cola_espera_operacion:
             print ("- %s;" % p.nro_paciente)
 
+    def mostrar_cola_espera_internacion(self):
+        print ("Pacientes en cola_espera_internacion actualmente:")
+        if len(self.cola_espera_internacion) == 0:
+            print ("- 0;")
+            return 
+        for p in self.cola_espera_internacion:
+            print ("- %s;" % p.nro_paciente)
+        print ("")
+
+
     def mostrar_cant_camas_libres(self):
         cant_ocupadas=cant=0
         for c in self.camas:
@@ -301,9 +307,9 @@ class Hospital(object):
                 cant += 1
             else:
                 cant_ocupadas +=1
-        print ("Camas actualizadas: cantidad de camas libres= %s ; cantidad camas ocupadas: %s" % 
-                                (cant,cant_ocupadas))
-        print ("")
+        # print ("Camas actualizadas: cantidad de camas libres= %s ; cantidad camas ocupadas: %s" % 
+        #                         (cant,cant_ocupadas))
+        # print ("")
         # print ("Camas actualizadas: %s" % hospital.camas)
         # print ("")
 
@@ -349,7 +355,7 @@ class SalaOperatoria:
     # SalaOperatoria.calcular_cirugias_diarias()
     def calcular_cirugias_diarias(self):
         self.cant_cirugias_restantes_diarias = round(np.random.poisson(10))
-        print (" En calcular_cirugias_diarias() ... ")
+        # print (" En calcular_cirugias_diarias() ... ")
         # print (" Cantidad de cirugias restantes diarias: %s" % self.cant_cirugias_restantes_diarias)
         # print ("")
 
@@ -363,20 +369,20 @@ class SalaOperatoria:
             if not q.ocupado:
                 q.ocupado=True
                 break
-        print ("Quirofanos actualizados en marcar_quirofano_ocupado(): ")
-        for q in self.quirofanos:
-            print (q)
-        print ("")
+        # print ("Quirofanos actualizados en marcar_quirofano_ocupado(): ")
+        # for q in self.quirofanos:
+        #     print (q)
+        # print ("")
 
     def marcar_quirofano_libre(self):
         for q in self.quirofanos:
             if q.ocupado:
                 q.ocupado=False
                 break
-        print ("Quirofanos actualizados en marcar_quirofano_libre(): ")
-        for q in self.quirofanos:
-            print (q)
-        print ("")
+        # print ("Quirofanos actualizados en marcar_quirofano_libre(): ")
+        # for q in self.quirofanos:
+        #     print (q)
+        # print ("")
         
 
     # Se muestran los quirofanos segun el estado que se desea
@@ -385,7 +391,7 @@ class SalaOperatoria:
         for quirofano in self.quirofanos:
             if quirofano.ocupado == estado_ocupado:
                 cant += 1
-        print ("La cantidad de quirofanos ocupados es: %s " % cant)
+        # print ("La cantidad de quirofanos ocupados es: %s " % cant)
 
 
 

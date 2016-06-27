@@ -1,6 +1,7 @@
 import time
-import pygame,sys
-from pygame.locals import *
+#import pygame
+import sys
+#from pygame.locals import *
 
 
 #Constantes de estado de quirofano
