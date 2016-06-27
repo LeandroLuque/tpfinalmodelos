@@ -373,7 +373,6 @@ def procesar_cierre_so(reloj, hospital, FEL):
 # Agrega los pacientes del nuevo dia, cuando encuentra en la FEL el evento
 # de inicio de dia
 def agregar_nuevos_pacientes(self):
-
     tiempos_arribos = [round(np.random.exponential(100)) for value in range(1,np.random.poisson(100))]
     for tiempo in tiempos_arribos:
         evento = Evento("Arribo de Paciente",tiempo + reloj.tiempo)
@@ -389,7 +388,6 @@ def imprimir_estadisticas(tiempos_espera,porc_uso_quirofano,
                                 cantidad_pacientes_FEL):
     print ("======================================================================================")
     print ("")
-    print ("- Tiempo de espera promedio para internacion(TEI): %s " % float(np.average(tiempos_espera)))
     print ("- Porcentaje del tiempo total de uso de la sala de operaciones (PTUS): %s " % porc_uso_quirofano)
     print ("---------------------------------------------------------------------------------")
     print ("- Cantidad de pacientes que logran ser operados (CPLO): %s " % pac_operados)
@@ -464,12 +462,12 @@ def generar_diagramas(porcentaje_uso_so):
     histograma_tiempos_espera={
         "tipo":HISTOGRAMA,
         "titulo":"Histogama tiempos de espera de pacientes",
-        "label_x":"Valores de tiempo",
+        "label_x":"Minutos",
         "label_y":"Frecuencias de tiempo",
         # "datos_x":tiempos_de_espera_pacientes,
         "datos_x":tiempos_anuales_espera_pacientes,
         #[minX,minY,maxX,maxY]
-        "limites_histograma":[0,0, 3, 5],
+        "limites_histograma":[0,0, 12, 20],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
         "paso_x": 1,
@@ -479,40 +477,46 @@ def generar_diagramas(porcentaje_uso_so):
     histograma_tiempos_uso_sala_operaciones={
         "tipo":HISTOGRAMA,
         "titulo":"Histogama uso de sala de operaciones",
-        "label_x":"Valores de tiempo",
-        "label_y":"Frecuencias de tiempo",
+        "label_x":"Tiempo anual de uso en minutos",
+        "label_y":"Frecuencias",
         "datos_x":tiempos_anuales_sala_operaciones,
         #[minX,minY,maxX,maxY]
-        "limites_histograma":[200000,0, 300000, 10],
+        "limites_histograma":[220000,0, 300000, 10],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
-        "paso_x": 20000,
+        "paso_x": 10000,
         "paso_y": 1
     }
     histograma_pacientes_atendidos= {
         "tipo":HISTOGRAMA,
         "titulo":"Histogama de pacientes operados",
-        "label_x":"Valores de tiempo",
-        "label_y":"Frecuencias de tiempo",
+        "label_x":"Cantidad de pacientes atenidos",
+        "label_y":"Frecuencias",
         "datos_x":pacientes_anuales_operados,
         #[minX,minY,maxX,maxY]
-        "limites_histograma":[3800,0, 4400, 10],
+        # Limites para 2 quirofanos
+        "limites_histograma":[4400,0, 4400, 10],
+        # Limites para 4 quirofanos
+        # "limites_histograma":[4400,0,15000, 10],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
-        "paso_x": 100,
+        "paso_x": 50,
         "paso_y": 1   
     }
     histograma_pacientes_no_atendidos= {
         "tipo":HISTOGRAMA,
         "titulo":"Histogama de pacientes no operados",
-        "label_x":"Valores de tiempo",
-        "label_y":"Frecuencias de tiempo",
+        "label_x":"Cantidad de pacientes no atendidos",
+        "label_y":"Frecuencias",
         "datos_x":pacientes_anuales_no_operados,
         #[minX,minY,maxX,maxY]
-        "limites_histograma":[11000,0, 14000, 10],
+        # Limites para 2 quirofanos
+        "limites_histograma":[13000,0, 16000, 10],
+        # Limites para 4 quirofanos
+        # "limites_histograma":[12800,0, 14200, 10],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
-        "paso_x": 1000,
+        "paso_x": 200,
         "paso_y": 1   
     }
 
@@ -558,14 +562,11 @@ def calcular_intervalo_confianza(tiempos_anuales_espera_pacientes):
                                 ])
     ex.mostrar()
 
-
-
-
 if __name__ == '__main__':
-
     FEL = FEL()
     reloj = Reloj()
-    hospital = Hospital(CANTIDAD_CAMAS,2)
+    CANT_QUIROFANOS = 2
+    hospital = Hospital(CANTIDAD_CAMAS,CANT_QUIROFANOS)
     inicializar_simulacion(FEL, reloj)
     #global cantidad_pacientes_atendidos
     #global cantidad_pacientes_no_atendidos
@@ -574,27 +575,12 @@ if __name__ == '__main__':
 
     cantidad_experimentos = 1
     while (cantidad_experimentos <= CANT_EXPERIMENTO):
-        #print ("Cantidad de experimentos actual %s" % cantidad_experimentos)
-        #print ("")
-        print ("--> NUEVO EXPERIMENTO: %s" % cantidad_experimentos)
+        print ("NUEVO EXPERIMENTO: %d" % cantidad_experimentos)
         while (cantidad_dias <= CANT_CORRIDAS):
-            print ("========DIA %d=============" % cantidad_dias)
-            # FEL.mostrar_eventos()
-            #print("============================")
-
+            print ("Dia:%s" % cantidad_dias)
             evento = FEL.extraer()
-            #print ("Evento extraido de la FEL: %s" % evento)
-            #print ("")
-            # if evento.paciente is not None:
-                #print ("El paciente relacionado al evento es: %s" % evento.paciente.nro_paciente)
-            
-            #print ("")
             reloj.tiempo = evento.tiempo
-            #print ("Reloj cambiado a: %s" % reloj.tiempo)
-            #print ("")
             if evento.tipo == "Arribo de Paciente":
-                #print ("Procesando arribo de paciente nuevo con tiempo de evento: %s , valor reloj: %s..." % 
-                    # (evento.tiempo, reloj.tiempo))
                 procesar_arribo(reloj, hospital, FEL)
 
             elif evento.tipo == "Paciente Internado":
@@ -607,8 +593,6 @@ if __name__ == '__main__':
                 procesar_entrada_quirofano(reloj, hospital, FEL, evento.paciente)
 
             elif evento.tipo == "Paciente Sale de Quirofano":
-                #print ("Evento Paciente Sale de quirofano con paciente %s en tiempo %s" %
-                    # (evento.paciente.nro_paciente,evento.tiempo))
                 procesar_salida_quirofano(reloj, hospital, FEL, evento.paciente)
 
             elif evento.tipo == "Apertura de Sala de Operaciones":
@@ -619,12 +603,7 @@ if __name__ == '__main__':
 
             elif evento.tipo == "Inicio Dia":
                 fines_anio = map(calcular_fin_anio,range(1,CANT_EXPERIMENTO+1))
-                #print ("Dia actual: %s; Los fines de anio son los dias numero: %s" %
-                            # (cantidad_dias , fines_anio) )
-                #print ("")
-                # Si se llego al final de un anio se recolecta
                 if cantidad_dias in fines_anio:
-                    #print ("Entre al fin de anio en el dia %s" % cantidad_dias)
                     #Se verifica si cambia de anio para recoger tiempos de uso del quirofano anuales
                     recolectar_tiempos_uso_sala_operaciones()
                     recolectar_pacientes()
@@ -634,28 +613,15 @@ if __name__ == '__main__':
                 cantidad_dias += 1
                 FEL.agregar_evento(evento)
                 agregar_nuevos_pacientes(FEL)
-                #print ("Nuevo dia! La cantidad de dias actual es: %s" % cantidad_dias)
-                #print ("Tiempo del nuevo dia: %s" % int(reloj.tiempo+1440) )
                 hospital.sala_operatoria.mostrar_quirofanos(estado_ocupado=True)
-                # for q in hospital.sala_operatoria.quirofanos:
-                    #print (q)
-                #print ("")
-
         cantidad_dias = 0
         cantidad_experimentos += 1
 
-    #Se obtienen las varaibles de estado de las colas de espera de internacion y operacion
     cantidad_pacientes_para_internar = 0
     cantidad_pacientes_para_operar = 0
-
     cantidad_pacientes_para_internar = len(hospital.cola_espera_internacion)
     cantidad_pacientes_para_operar = len(hospital.cola_espera_operacion)
     cantidad_pacientes_FEL = FEL.calcular_tamanio()
-
-    #print ("cantidad_pacientes_no_atendidos: %s" % cantidad_pacientes_no_atendidos)
-    #print ("cantidad_pacientes_atendidos: %s" % cantidad_pacientes_atendidos)
-    # #print ("tiempos_de_espera_pacientes: %s" % tiempos_de_espera_pacientes)
-    #print ("longitud tiempos_de_espera_pacientes: %s" % len(tiempos_de_espera_pacientes))
     imprimir_estadisticas(tiempos_de_espera_pacientes,(tiempo_uso_sala_operaciones/reloj.tiempo)*100,
                             cantidad_pacientes_atendidos,
                             cantidad_pacientes_no_atendidos,pacientes_para_operacion,
@@ -664,12 +630,7 @@ if __name__ == '__main__':
                             cantidad_pacientes_para_internar,
                             cantidad_pacientes_para_operar,
                             cantidad_pacientes_FEL)
-    
-    # print (" ********************************************************************* ")
-    # print ("tiempos de uso anuales de sala operaciones : %s" % tiempos_anuales_sala_operaciones)
-    # print ("pacientes anuales operados: %s " % pacientes_anuales_operados)
-    # print ("pacientes anuales no operados: %s " % pacientes_anuales_no_operados)
-    # print ("")
+
     #Hijo
     if os.fork() == 0:
         generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100)
