@@ -9,10 +9,10 @@ from clases import Evento
 from clases import FEL
 from clases import Paciente
 from clases import Hospital
-# from clases import Observable
+from clases import Observable
 
 from utilidades.utilidades import *
-#from vista.vistaV2 import *
+from vista.vistaV2 import *
 import sys
 import math
 
@@ -138,7 +138,7 @@ def procesar_arribo(reloj, hospital, FEL):
         #print ("Fin de procesar_arribo()")
         #print ("")
 
-def procesar_internacion(reloj, hospital, FEL,evento):
+def procesar_internacion(reloj, hospital, FEL,evento,obs):
     global acumulado_anual_tiempos_espera
     # #print ("En procesar_internacion() ...")
     # #print ("")
@@ -160,6 +160,9 @@ def procesar_internacion(reloj, hospital, FEL,evento):
         # Se asigna la cama y si el paciente tiene turno de quirofano, se lo pone en
         # la cola de pacientes para operacion
         hospital.internar(paciente)
+        obs.notificar_evento("Fin Paciente Internado",{"valor": len(hospital.cola_espera_internacion),
+            "valor2": len(hospital.cola_espera_operacion)})
+
         # #print ("Se agrego al paciente a la cola de espera operacion, la nueva cola es: ")
         # hospital.mostrar_cola_espera_operacion()
         # #print ("")
@@ -183,6 +186,7 @@ def procesar_internacion(reloj, hospital, FEL,evento):
         # #print ("El paciente nro %s no tiene cama libre " % paciente.nro_paciente)
         # #print ("")
         hospital.agregar_paciente_a_espera(paciente)
+        obs.notificar_evento("Paciente Internado",{"valor": len(hospital.cola_espera_internacion)})
     
     #Primero procesas los pacientes en la cola
     # if len(hospital.cola_espera_internacion) > 0:
@@ -219,7 +223,7 @@ def procesar_internacion(reloj, hospital, FEL,evento):
 
 
 
-def procesar_fin_internacion(reloj, hospital, FEL,paciente):
+def procesar_fin_internacion(reloj, hospital, FEL,paciente,obs):
     global cantidad_pacientes_no_atendidos
     global acumulado_anual_pacientes_no_operados
     hospital.alta_paciente(paciente.nro_paciente)
@@ -495,12 +499,12 @@ def generar_diagramas(porcentaje_uso_so):
         "datos_x":pacientes_anuales_operados,
         #[minX,minY,maxX,maxY]
         # Limites para 2 quirofanos
-        "limites_histograma":[4400,0, 4400, 10],
+        "limites_histograma":[3800,0, 4400, 10],
         # Limites para 4 quirofanos
         # "limites_histograma":[4400,0,15000, 10],
         #El paso tiene que ver con la cantidad de valores que se 
         #mostraran en la escala de x o y.
-        "paso_x": 50,
+        "paso_x": 100,
         "paso_y": 1   
     }
     histograma_pacientes_no_atendidos= {
@@ -573,24 +577,32 @@ if __name__ == '__main__':
     global cantidad_dias
     global tiempos_anuales_espera_pacientes
 
+    v = Canvas(pygame)
+    obs = Observable(v)
+    t= threading.Thread(target=v.mostrar)
+    t.daemon=True
+    t.start()
+
     cantidad_experimentos = 1
     while (cantidad_experimentos <= CANT_EXPERIMENTO):
         print ("NUEVO EXPERIMENTO: %d" % cantidad_experimentos)
         while (cantidad_dias <= CANT_CORRIDAS):
-            print ("Dia:%s" % cantidad_dias)
+            # print ("Dia:%s" % cantidad_dias)
             evento = FEL.extraer()
             reloj.tiempo = evento.tiempo
             if evento.tipo == "Arribo de Paciente":
                 procesar_arribo(reloj, hospital, FEL)
 
             elif evento.tipo == "Paciente Internado":
-                procesar_internacion(reloj, hospital, FEL,evento)
+                procesar_internacion(reloj, hospital, FEL,evento,obs)
 
             elif evento.tipo == "Fin Paciente Internado":
-                procesar_fin_internacion(reloj, hospital, FEL,evento.paciente)
+                procesar_fin_internacion(reloj, hospital, FEL,evento.paciente,obs)
 
             elif evento.tipo == "Paciente Entra a Quirofano":
                 procesar_entrada_quirofano(reloj, hospital, FEL, evento.paciente)
+                obs.notificar_evento("Paciente Entra a Quirofano",
+                    {"porcentaje_actual":(tiempo_uso_sala_operaciones/reloj.tiempo)*100} )
 
             elif evento.tipo == "Paciente Sale de Quirofano":
                 procesar_salida_quirofano(reloj, hospital, FEL, evento.paciente)
@@ -631,6 +643,7 @@ if __name__ == '__main__':
                             cantidad_pacientes_para_operar,
                             cantidad_pacientes_FEL)
 
+    v.terminar_simulacion()
     #Hijo
     if os.fork() == 0:
         generar_diagramas((tiempo_uso_sala_operaciones/reloj.tiempo)*100)

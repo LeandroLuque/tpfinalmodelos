@@ -13,15 +13,16 @@ class Observable(object):
         self.vista = vista
 
     def notificar_evento(self,evento,dic_atributos=None):
-        if evento == "Arribo de Paciente":
+        if evento == "Paciente Internado":
             self.vista.getColaEspera().incrementar(dic_atributos["valor"])
-        elif evento == "Paciente Internado":
+        elif evento == "Fin Paciente Internado":
             self.vista.getColaEspera().decrementar(dic_atributos["valor"])
             self.vista.getColaEsperaOperacion().incrementar(dic_atributos["valor2"])
         elif evento == "Paciente Entra a Quirofano":
-            self.vista.getColaEsperaOperacion().decrementar(dic_atributos["valor"])
-        elif evento == "Paciente Sale de Quirofano":
-            pass
+            self.vista.actualizar_porcentaje_quirofano(dic_atributos["porcentaje_actual"])
+            # self.vista.getColaEsperaOperacion().decrementar(dic_atributos["valor"])
+        # elif evento == "Paciente Sale de Quirofano":
+        #     pass
 
 
 

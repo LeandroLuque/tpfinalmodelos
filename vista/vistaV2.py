@@ -1,5 +1,5 @@
 import time
-#import pygame
+import pygame
 import sys
 #from pygame.locals import *
 
@@ -101,16 +101,18 @@ class Canvas:
 			# Posibles entradas del teclado y mouse
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					print "Cerrando la ventana ..."
-					print ""
+					print ("Cerrando la ventana ...")
+					print ("")
 					sys.exit()
 			self.redibujar()
 			# self.probarQuirofanos(contadorColaLlegada)
 			# contadorColaLlegada=self.probarColaLlegadaPositiva(contadorColaLlegada)
 			# contadorColaCirugia=self.probarColaCirugiaNegativa(contadorColaCirugia)
 			# contador=self.probarColaLlegadaNegativa(contadorColaLlegada)
-			print "--------------------------------"
-
+			# print "--------------------------------"
+			
+	def actualizar_porcentaje_quirofano(self,porcentaje):
+		self.q2.actualizarPropiedad("porcent",porcentaje)
 
 	# def probarQuirofanos(self,cont):
 	# 	#time.sleep(1)
@@ -195,15 +197,15 @@ class Quirofano(pygame.sprite.Sprite):
 	def actualizar(self,surface):
 		color=(0,0,0)
 		alpha=200
-		if self.estado==ESTADO_ABIERTO:
-			color=(0,0,255)
-		else:
-			color=(255,0,0)
+		# if self.estado==ESTADO_ABIERTO:
+		# 	color=(0,0,255)
+		# else:
+		# 	color=(255,0,0)
 
 		#Se asigna un rectangulo encima de Surface "self.image" que sea transparente
 		ancho,alto=self.image.get_size()
-		self.supDisponibilidad=self.pygame.draw.rect(surface,color,(self.posicion.getX(),
-					self.posicion.getY(),ancho,alto))
+		# self.supDisponibilidad=self.pygame.draw.rect(surface,color,(self.posicion.getX(),
+		# 			self.posicion.getY(),ancho,alto))
 		self.image.set_alpha(alpha)
 		#Se redibuja la letra
 		fg = 0,0,0
@@ -236,13 +238,13 @@ class ColaEspera(pygame.sprite.Sprite):
 		#Nota: La cola crece o decrece de largo solamente, y el valor Y de la barra variable 
 		# NOTA:El topeSuperiorBarra es el tope de la pila que representa la barra
 		# y el self.limiteInferiorBarra es el fondo de la pila que representa la barra. 
-		self.topeSuperiorBarra=self.limiteInferiorBarra=0
-		if tamanioColaMax:
-			self.topeSuperiorBarra=self.posicion.getY()
-			self.limiteInferiorBarra=largo
-		else:
-			self.topeSuperiorBarra=self.posicion.getY()+largo-1
-			self.limiteInferiorBarra=largo-self.posicion.getY()+1
+		# self.topeSuperiorBarra=self.limiteInferiorBarra=0
+		# if tamanioColaMax:
+		# 	self.topeSuperiorBarra=self.posicion.getY()
+		# 	self.limiteInferiorBarra=largo
+		# else:
+		# 	self.topeSuperiorBarra=self.posicion.getY()+largo-1
+		# 	self.limiteInferiorBarra=largo-self.posicion.getY()+1
 
 
 		#BACKUP version vieja!
@@ -254,8 +256,8 @@ class ColaEspera(pygame.sprite.Sprite):
 		# 	self.limiteInferiorBarra=largo-self.posicion.getY()+1
 
 		#Medidas de la barra negra no variable
-		self.largoConstante=largo
-		self.ancho=ancho
+		# self.largoConstante=largo
+		# self.ancho=ancho
 		#Se configura el label con el nombre del quirofano
 		self.font=pygame.font.Font(None,26)
 		self.escalarImagen()
@@ -279,40 +281,40 @@ class ColaEspera(pygame.sprite.Sprite):
 	#Se incrementa el tamanio de la cola y se actualiza la cant. actual de personas.
 	#(se decrementa la distancia del valor Y del eje de coordenadas)
 	def incrementar(self,valor):
-		self.topeSuperiorBarra-=CONSTANTE_INCREMENTO_DECREMENTO
-		self.limiteInferiorBarra+=CONSTANTE_INCREMENTO_DECREMENTO
-		print "self.topeSuperiorBarra: %s ; self.limiteInferiorBarra: %s " % (self.topeSuperiorBarra,
-			self.limiteInferiorBarra)
-		print ""
-		if self.topeSuperiorBarra <= 200:
-			self.topeSuperiorBarra=200
-			self.limiteInferiorBarra=199
+		# self.topeSuperiorBarra-=CONSTANTE_INCREMENTO_DECREMENTO
+		# self.limiteInferiorBarra+=CONSTANTE_INCREMENTO_DECREMENTO
+		# print "self.topeSuperiorBarra: %s ; self.limiteInferiorBarra: %s " % (self.topeSuperiorBarra,
+		# 	self.limiteInferiorBarra)
+		# print ""
+		# if self.topeSuperiorBarra <= 200:
+		# 	self.topeSuperiorBarra=200
+		# 	self.limiteInferiorBarra=199
 		self.cantPersonas = valor
 
 	#Se decrementa el tamanio de la cola (se aumenta la distancia del valor Y
 	# del eje de coordenadas)
 	def decrementar(self,valor):
-		self.topeSuperiorBarra+=CONSTANTE_INCREMENTO_DECREMENTO
-		self.limiteInferiorBarra-=CONSTANTE_INCREMENTO_DECREMENTO
-		if self.limiteInferiorBarra<0:
-			self.limiteInferiorBarra=0
-			self.topeSuperiorBarra=self.posicion.getY()+self.largoConstante-2
+		# self.topeSuperiorBarra+=CONSTANTE_INCREMENTO_DECREMENTO
+		# self.limiteInferiorBarra-=CONSTANTE_INCREMENTO_DECREMENTO
+		# if self.limiteInferiorBarra<0:
+		# 	self.limiteInferiorBarra=0
+		# 	self.topeSuperiorBarra=self.posicion.getY()+self.largoConstante-2
 		self.cantPersonas=valor
 
 	#Se redibuja la barra que representa una cola de pacientes
 	def actualizar(self,surface):
 		#Barra exterior que contiene a la barra variable
 		# (x,y,ancho,alto)
-		self.pygame.draw.rect(surface,(0,0,0),(self.posicion.getX(),
-					self.posicion.getY(),
-					self.ancho,
-					self.largoConstante),3 )
+		# self.pygame.draw.rect(surface,(0,0,0),(self.posicion.getX(),
+		# 			self.posicion.getY(),
+		# 			self.ancho,
+		# 			self.largoConstante),3 )
 
-		#Barra interior roja variable de la cola
-		self.pygame.draw.rect(surface,(255,0,0),(self.posicion.getX()+2,
-					self.topeSuperiorBarra,
-					self.ancho-4,
-					self.limiteInferiorBarra) )
+		# #Barra interior roja variable de la cola
+		# self.pygame.draw.rect(surface,(255,0,0),(self.posicion.getX()+2,
+		# 			self.topeSuperiorBarra,
+		# 			self.ancho-4,
+		# 			self.limiteInferiorBarra) )
 
 		self.dibujarTextoCantidad(surface)
 		self.dibujarLabel(surface)
